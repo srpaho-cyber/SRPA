@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freight ERP Pro — Login</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500;600&family=Barlow+Condensed:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy-950:#03070f;--navy-900:#060d1a;--navy-850:#080f1f;
+  --navy-800:#0c1628;--navy-700:#132138;
+  --accent:#2563eb;--accent-bright:#3b82f6;--accent-glow:rgba(37,99,235,0.18);
+  --green:#16a34a;--red:#dc2626;--amber:#d97706;
+  --text-pri:#e0eaf4;--text-sec:#8fa8c8;--text-muted:#4a6280;
+  --border:rgba(143,168,200,0.1);--border-2:rgba(143,168,200,0.18);--border-3:rgba(143,168,200,0.28);
+  --font-ui:'IBM Plex Sans',sans-serif;--font-mono:'IBM Plex Mono',monospace;--font-data:'Barlow Condensed',sans-serif;
+}
+html,body{
+  min-height:100vh;background:var(--navy-900);color:var(--text-pri);
+  font-family:var(--font-ui);font-size:13px;-webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(143,168,200,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(143,168,200,0.025) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+.wrap{min-height:100vh;display:flex;position:relative;z-index:1}
+
+/* ── LEFT BRANDING PANEL ── */
+.left{
+  width:420px;flex-shrink:0;background:var(--navy-950);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;padding:48px 40px;
+  position:relative;overflow:hidden;
+}
+.left::after{
+  content:'';position:absolute;bottom:-80px;left:-80px;
+  width:400px;height:400px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(37,99,235,0.08) 0%,transparent 70%);
+}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:auto}
+.brand-mark{
+  width:36px;height:36px;background:var(--accent);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  clip-path:polygon(0 0,100% 0,100% 70%,70% 100%,0 100%);
+}
+.brand-mark svg{width:18px;height:18px;fill:white}
+.brand-name{font-family:var(--font-data);font-size:18px;font-weight:800;letter-spacing:.5px;color:var(--text-pri);line-height:1}
+.brand-sub{font-family:var(--font-mono);font-size:8.5px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-top:2px}
+.feat-block{margin:auto 0 0}
+.feat-title{font-family:var(--font-data);font-size:26px;font-weight:700;color:var(--text-pri);line-height:1.2;margin-bottom:8px}
+.feat-sub{font-family:var(--font-mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-bright);margin-bottom:28px}
+.feat-list{display:flex;flex-direction:column;gap:12px}
+.feat-item{display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--text-sec);line-height:1.5}
+.feat-dot{
+  width:20px;height:20px;border-radius:2px;flex-shrink:0;margin-top:1px;
+  background:var(--accent-glow);border:1px solid rgba(37,99,235,0.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;color:var(--accent-bright);font-family:var(--font-mono);
+}
+.version{margin-top:32px;font-family:var(--font-mono);font-size:8.5px;letter-spacing:1px;color:var(--text-muted);text-transform:uppercase}
+
+/* ── RIGHT LOGIN PANEL ── */
+.right{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 24px}
+.card{width:100%;max-width:420px}
+.login-title{font-family:var(--font-data);font-size:28px;font-weight:700;color:var(--text-pri);letter-spacing:.3px;margin-bottom:4px}
+.login-sub{font-family:var(--font-mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:32px}
+
+/* form */
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:16px}
+.fg label{font-family:var(--font-mono);font-size:8.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);font-weight:500}
+.inp-wrap{position:relative}
+.inp-ico{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;display:flex;align-items:center}
+.eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-muted);padding:2px;display:flex;align-items:center;transition:color .15s}
+.eye:hover{color:var(--text-sec)}
+.fi{
+  width:100%;background:var(--navy-800);border:1px solid var(--border);border-radius:2px;
+  padding:10px 12px 10px 36px;font-family:var(--font-ui);font-size:13px;color:var(--text-pri);
+  outline:none;transition:border-color .15s;
+}
+.fi::placeholder{color:var(--text-muted)}
+.fi:focus{border-color:var(--border-3)}
+.fi.has-eye{padding-right:38px}
+.fi.err{border-color:var(--red) !important}
+
+.row-extra{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;margin-top:-4px}
+.chk-lbl{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--text-sec);cursor:pointer;user-select:none}
+.chk-lbl input{width:14px;height:14px;accent-color:var(--accent);cursor:pointer}
+.link{font-size:11.5px;color:var(--accent-bright);cursor:pointer;font-family:var(--font-mono);letter-spacing:.3px;transition:color .15s;background:none;border:none;padding:0}
+.link:hover{color:var(--text-pri)}
+
+.btn-submit{
+  width:100%;padding:11px 20px;background:var(--accent);border:none;border-radius:2px;
+  font-family:var(--font-ui);font-size:13px;font-weight:600;color:white;cursor:pointer;
+  letter-spacing:.3px;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-submit:hover{background:var(--accent-bright)}
+.btn-submit:disabled{opacity:.6;cursor:not-allowed}
+
+/* alerts */
+.alert-box{margin-bottom:16px}
+.alert{display:flex;gap:10px;padding:10px 13px;border-radius:2px;border-left:3px solid;font-size:12px;line-height:1.5;animation:ain .2s ease}
+@keyframes ain{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.a-err{background:rgba(220,38,38,.1);border-color:var(--red);color:#f87171}
+.a-warn{background:rgba(217,119,6,.06);border-color:var(--amber);color:#fbbf24}
+.a-ok{background:rgba(22,163,74,.1);border-color:var(--green);color:#4ade80}
+.a-info{background:rgba(37,99,235,.07);border-color:var(--accent);color:#60a5fa}
+
+/* spinner */
+.spin{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* panels */
+.panel{display:none}.panel.on{display:block}
+.divider{display:flex;align-items:center;gap:12px;margin:20px 0;font-family:var(--font-mono);font-size:8.5px;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted)}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* session info box */
+.sess-box{margin-top:20px;padding:12px 14px;background:var(--navy-850);border:1px solid var(--border);border-radius:2px;font-family:var(--font-mono);font-size:9px;letter-spacing:.5px;color:var(--text-muted);display:flex;flex-direction:column;gap:5px}
+.sess-row{display:flex;justify-content:space-between}
+.sess-val{color:var(--text-sec)}
+
+@media(max-width:860px){.left{display:none}.right{padding:32px 20px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- LEFT PANEL -->
+  <div class="left">
+    <div class="brand">
+      <div class="brand-mark"><svg viewBox="0 0 16 16"><path d="M0 4h10v2H0zm0 3h16v2H0zm0 3h12v2H0z"/></svg></div>
+      <div>
+        <div class="brand-name">FREIGHT ERP PRO</div>
+        <div class="brand-sub">Operations Platform</div>
+      </div>
+    </div>
+    <div class="feat-block">
+      <div class="feat-title">Transport Management<br>Built for India</div>
+      <div class="feat-sub">End-to-end freight operations</div>
+      <div class="feat-list">
+        <div class="feat-item"><div class="feat-dot">LR</div><div>Lorry Receipts with 3-copy A4 print — Office, Consignor &amp; Consignee</div></div>
+        <div class="feat-item"><div class="feat-dot">MF</div><div>Manifest &amp; Dispatch with real-time status tracking</div></div>
+        <div class="feat-item"><div class="feat-dot">₹</div><div>Party ledger, payments, outstanding balance auto-updated</div></div>
+        <div class="feat-item"><div class="feat-dot">⬡</div><div>E-Way Bill monitoring with live countdown &amp; auto-alerts</div></div>
+        <div class="feat-item"><div class="feat-dot">◱</div><div>12 report types with CSV export and real-time data</div></div>
+        <div class="feat-item"><div class="feat-dot">≣</div><div>Complete audit log — every action recorded with user &amp; timestamp</div></div>
+      </div>
+    </div>
+    <div class="version">v4.0 · Supabase · Vanilla JS · No Framework</div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right">
+    <div class="card">
+
+      <!-- LOGIN PANEL -->
+      <div class="panel on" id="panelLogin">
+        <div class="login-title">Welcome Back</div>
+        <div class="login-sub">Sign in to your ERP account</div>
+
+        <div class="alert-box" id="alertLogin" style="display:none"></div>
+
+        <div class="fg">
+          <label>Email Address</label>
+          <div class="inp-wrap">
+            <span class="inp-ico">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+            </span>
+            <input class="fi" type="email" id="fEmail" placeholder="admin@company.com" autocomplete="email" spellcheck="false">
+          </div>
+        </div>
+
+        <div class="fg">
+          <label>Password</label>
+          <div class="inp-wrap">
+            <span class="inp-ico">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </span>
+            <input class="fi has-eye" type="password" id="fPass" placeholder="Enter your password" autocomplete="current-password">
+            <button class="eye" id="btnEye" type="button" title="Show/hide">
+              <svg id="eyeIcon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="row-extra">
+          <label class="chk-lbl">
+            <input type="checkbox" id="chkRemember" checked> Remember me for 7 days
+          </label>
+          <button class="link" id="btnForgot">Forgot password?</button>
+        </div>
+
+        <button class="btn-submit" id="btnLogin">
+          <span id="loginLabel">SIGN IN</span>
+        </button>
+
+        <div id="sessBox" class="sess-box" style="display:none">
+          <div class="sess-row"><span>Last login</span><span class="sess-val" id="lastLogin">—</span></div>
+          <div class="sess-row"><span>Session expires</span><span class="sess-val">7 days</span></div>
+        </div>
+      </div>
+
+      <!-- FORGOT PASSWORD PANEL -->
+      <div class="panel" id="panelReset">
+        <div class="login-title">Reset Password</div>
+        <div class="login-sub">Contact your administrator</div>
+
+        <div class="alert a-info" style="display:flex;gap:10px;margin-bottom:20px">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div>Ask your admin to reset your password from <strong>Users &amp; Roles</strong> in the ERP. Or run the SQL below in Supabase.</div>
+        </div>
+
+        <div class="fg">
+          <label>Your Email</label>
+          <div class="inp-wrap">
+            <span class="inp-ico">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+            </span>
+            <input class="fi" type="email" id="fResetEmail" placeholder="your@email.com">
+          </div>
+        </div>
+
+        <div class="alert-box" id="alertReset" style="display:none"></div>
+
+        <button class="btn-submit" id="btnReset" style="margin-bottom:12px">SEND REQUEST TO ADMIN</button>
+
+        <div style="text-align:center;margin-top:8px">
+          <button class="link" id="btnBackLogin">← Back to Login</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Load config.js FIRST so SUPABASE_URL and SUPABASE_ANON_KEY are available -->
+<script src="config.js"></script>
+<!-- Then Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- ALL logic in a single deferred inline script — no onclick attributes anywhere -->
+<script>
+(function() {
+'use strict';
+
+// ── Supabase client (created after config.js loads) ──────────────
+var db = null;
+
+function getDB() {
+  if (db) return db;
+  if (window.__CONFIG_MISSING && window.__CONFIG_MISSING.length) {
+    showAlert('alertLogin','warn',
+      'Supabase not configured. Open <strong>config.js</strong> and paste your Project URL and anon key.');
+    return null;
+  }
+  db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  return db;
+}
+
+// ── Helpers ───────────────────────────────────────────────────────
+function showAlert(boxId, type, html) {
+  var el = document.getElementById(boxId);
+  if (!el) return;
+  var bg  = {err:'a-err',warn:'a-warn',ok:'a-ok',info:'a-info'}[type] || 'a-info';
+  var ico = {
+    err:  '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+    warn: '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+    ok:   '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',
+    info: '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+  }[type] || '';
+  el.innerHTML = '<div class="alert ' + bg + '">' + ico + '<div>' + html + '</div></div>';
+  el.style.display = '';
+}
+function hideAlert(boxId) {
+  var el = document.getElementById(boxId);
+  if (el) { el.style.display = 'none'; el.innerHTML = ''; }
+}
+function setErr(id, on) {
+  var el = document.getElementById(id);
+  if (el) el.classList.toggle('err', on);
+}
+function setLoading(on) {
+  var btn = document.getElementById('btnLogin');
+  var lbl = document.getElementById('loginLabel');
+  btn.disabled = on;
+  lbl.innerHTML = on ? '<div class="spin"></div> SIGNING IN\u2026' : 'SIGN IN';
+}
+
+// ── Session ───────────────────────────────────────────────────────
+var SK = (typeof SESSION_KEY !== 'undefined') ? SESSION_KEY : 'erp_session';
+var SD = (typeof SESSION_DAYS !== 'undefined') ? SESSION_DAYS : 7;
+
+function saveSession(user, remember) {
+  var data = {
+    id: user.id, name: user.name, email: user.email,
+    role: user.role, branch_id: user.branch_id,
+    expiry: remember ? Date.now() + SD * 86400000 : null,
+    saved_at: Date.now()
+  };
+  var store = remember ? localStorage : sessionStorage;
+  store.setItem(SK, JSON.stringify(data));
+}
+
+function loadSession() {
+  var raw = localStorage.getItem(SK) || sessionStorage.getItem(SK);
+  if (!raw) return null;
+  try {
+    var s = JSON.parse(raw);
+    if (s.expiry && Date.now() > s.expiry) {
+      localStorage.removeItem(SK); sessionStorage.removeItem(SK);
+      return null;
+    }
+    return s;
+  } catch(e) { return null; }
+}
+
+// ── Panels ────────────────────────────────────────────────────────
+function showPanel(id) {
+  ['panelLogin','panelReset'].forEach(function(p) {
+    document.getElementById(p).classList.toggle('on', p === id);
+  });
+}
+
+// ── Eye toggle ────────────────────────────────────────────────────
+function toggleEye() {
+  var inp = document.getElementById('fPass');
+  var ico = document.getElementById('eyeIcon');
+  var show = inp.type === 'password';
+  inp.type = show ? 'text' : 'password';
+  ico.innerHTML = show
+    ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'
+    : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+}
+
+// ── LOGIN ─────────────────────────────────────────────────────────
+async function doLogin() {
+  hideAlert('alertLogin');
+  var email    = document.getElementById('fEmail').value.trim().toLowerCase();
+  var password = document.getElementById('fPass').value;
+  var remember = document.getElementById('chkRemember').checked;
+
+  var ok = true;
+  if (!email)    { setErr('fEmail', true);  ok = false; } else setErr('fEmail', false);
+  if (!password) { setErr('fPass',  true);  ok = false; } else setErr('fPass',  false);
+  if (!ok) { showAlert('alertLogin','err','Please enter your email and password.'); return; }
+
+  var client = getDB();
+  if (!client) return;
+
+  setLoading(true);
+
+  try {
+    // 1. Find user
+    var res = await client.from('users')
+      .select('id,name,email,role,branch_id,is_active,last_login,password_hash')
+      .eq('email', email).limit(1);
+
+    if (res.error) throw new Error(res.error.message);
+    if (!res.data || res.data.length === 0) {
+      showAlert('alertLogin','err','No account found with that email address.');
+      setErr('fEmail', true); setLoading(false); return;
+    }
+
+    var user = res.data[0];
+
+    // 2. Active check
+    if (!user.is_active) {
+      showAlert('alertLogin','err','This account has been deactivated. Contact your administrator.');
+      setLoading(false); return;
+    }
+
+    // 3. Password verify via RPC
+    var pwRes = await client.rpc('verify_password', { plain: password, hashed: user.password_hash });
+
+    if (pwRes.error) {
+      // RPC not available yet (schema not run) — plain-text fallback for first setup
+      console.warn('verify_password RPC unavailable, using fallback:', pwRes.error.message);
+      if (user.password_hash && user.password_hash !== password) {
+        showAlert('alertLogin','err','Incorrect password. Please try again.');
+        setErr('fPass', true); setLoading(false); return;
+      }
+    } else if (!pwRes.data) {
+      showAlert('alertLogin','err','Incorrect password. Please try again.');
+      setErr('fPass', true); setLoading(false); return;
+    }
+
+    // 4. Update last_login
+    await client.from('users').update({ last_login: new Date().toISOString() }).eq('id', user.id);
+
+    // 5. Save remember-me email
+    if (remember) {
+      localStorage.setItem('erp_remembered_email', email);
+      localStorage.setItem('erp_last_login', String(Date.now()));
+    } else {
+      localStorage.removeItem('erp_remembered_email');
+    }
+
+    // 6. Save session & redirect
+    saveSession(user, remember);
+    showAlert('alertLogin','ok','Welcome back, <strong>' + user.name + '</strong>! Loading ERP\u2026');
+    setTimeout(function() { window.location.href = 'index.html'; }, 800);
+
+  } catch(e) {
+    showAlert('alertLogin','err','Login error: ' + e.message);
+    setLoading(false);
+  }
+}
+
+// ── RESET ─────────────────────────────────────────────────────────
+function doReset() {
+  var email = document.getElementById('fResetEmail').value.trim();
+  if (!email) { showAlert('alertReset','err','Please enter your email address.'); return; }
+  showAlert('alertReset','ok',
+    'Request noted for <strong>' + email + '</strong>. Ask your administrator to reset your password from <strong>Users &amp; Roles</strong>.');
+}
+
+// ── BOOT ──────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+
+  // Wire all buttons (no onclick attrs = no Cloudflare breakage)
+  document.getElementById('btnLogin').addEventListener('click', doLogin);
+  document.getElementById('btnEye').addEventListener('click', toggleEye);
+  document.getElementById('btnForgot').addEventListener('click', function() { showPanel('panelReset'); });
+  document.getElementById('btnBackLogin').addEventListener('click', function() { showPanel('panelLogin'); hideAlert('alertReset'); });
+  document.getElementById('btnReset').addEventListener('click', doReset);
+
+  // Enter key behaviour
+  document.getElementById('fEmail').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') document.getElementById('fPass').focus();
+  });
+  document.getElementById('fPass').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doLogin();
+  });
+  document.getElementById('fResetEmail').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doReset();
+  });
+
+  // Check config
+  if (window.__CONFIG_MISSING && window.__CONFIG_MISSING.length) {
+    showAlert('alertLogin','warn',
+      'Supabase not configured. Open <strong>config.js</strong> and paste your Project URL and anon key.');
+  }
+
+  // Check existing session → redirect if valid
+  var sess = loadSession();
+  if (sess) {
+    showAlert('alertLogin','ok','Session found for <strong>' + sess.name + '</strong>. Redirecting\u2026');
+    setTimeout(function() { window.location.href = 'index.html'; }, 600);
+    return;
+  }
+
+  // Pre-fill remembered email
+  var remEmail = localStorage.getItem('erp_remembered_email');
+  if (remEmail) {
+    document.getElementById('fEmail').value = remEmail;
+    var lastTs = localStorage.getItem('erp_last_login');
+    if (lastTs) {
+      document.getElementById('sessBox').style.display = '';
+      document.getElementById('lastLogin').textContent =
+        new Date(parseInt(lastTs)).toLocaleString('en-IN', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
+    }
+    document.getElementById('fPass').focus();
+  } else {
+    document.getElementById('fEmail').focus();
+  }
+
+  // Init DB connection early (so first login is faster)
+  getDB();
+});
+
+})(); // end IIFE — all functions are local, no global pollution, no Cloudflare breakage
+</script>
+</body>
+</html>
+

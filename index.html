@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freight ERP Pro — Operations Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500;600&family=Barlow+Condensed:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<div class="shell">
+
+<!-- ═══════════════════════════════════════════ SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-head">
+    <div class="brand-mark">
+      <svg viewBox="0 0 16 16"><path d="M0 4h10v2H0zm0 3h16v2H0zm0 3h12v2H0z"/></svg>
+    </div>
+    <div>
+      <div class="brand-text" id="company-brand">FREIGHT ERP</div>
+      <div class="brand-sub">OPERATIONS PLATFORM</div>
+    </div>
+  </div>
+
+  <div class="branch-sel" onclick="M('branchModal')">
+    <div class="branch-live"></div>
+    <div class="branch-name-text" id="sidebar-branch">Loading...</div>
+    <div class="branch-chevron">▼</div>
+  </div>
+
+  <nav class="nav-scroll">
+
+    <div class="nav-grp">Core</div>
+    <div class="nav-link active" data-pg="dashboard" onclick="go('dashboard',this)">
+      <span class="nav-ico">▦</span> Dashboard
+    </div>
+
+    <div class="nav-grp">Operations</div>
+    <div class="nav-link" data-pg="bookings" onclick="go('bookings',this)">
+      <span class="nav-ico">◈</span> Bookings
+    </div>
+    <div class="nav-link" data-pg="lr" onclick="go('lr',this)">
+      <span class="nav-ico">▤</span> Lorry Receipts
+    </div>
+    <div class="nav-link" data-pg="manifest" onclick="go('manifest',this)">
+      <span class="nav-ico">▥</span> Manifest
+    </div>
+    <div class="nav-link" data-pg="dispatch" onclick="go('dispatch',this)">
+      <span class="nav-ico">▶</span> Dispatch
+    </div>
+    <div class="nav-link" data-pg="delivery" onclick="go('delivery',this)">
+      <span class="nav-ico">✓</span> Delivery
+    </div>
+
+    <div class="nav-grp">Finance</div>
+    <div class="nav-link" data-pg="ledger" onclick="go('ledger',this)">
+      <span class="nav-ico">≡</span> Party Ledger
+    </div>
+    <div class="nav-link" data-pg="payments" onclick="go('payments',this)">
+      <span class="nav-ico">⊞</span> Payments
+    </div>
+    <div class="nav-link" data-pg="daybook" onclick="go('daybook',this)">
+      <span class="nav-ico">◧</span> Daybook
+    </div>
+    <div class="nav-link" data-pg="expenses" onclick="go('expenses',this)">
+      <span class="nav-ico">◑</span> Expenses
+    </div>
+
+    <div class="nav-grp">Compliance</div>
+    <div class="nav-link" data-pg="eway" onclick="go('eway',this)">
+      <span class="nav-ico">⬡</span> E-Way Bills
+    </div>
+
+    <div class="nav-grp">Reports</div>
+    <div class="nav-link" data-pg="reports" onclick="go('reports',this)">
+      <span class="nav-ico">◱</span> Reports
+    </div>
+
+    <div class="nav-grp">Admin</div>
+    <div class="nav-link" data-pg="users" data-role="admin,manager" onclick="go('users',this)">
+      <span class="nav-ico">◉</span> Users & Roles
+    </div>
+    <div class="nav-link" data-pg="masters" data-role="admin" onclick="go('masters',this)">
+      <span class="nav-ico">◈</span> Masters
+    </div>
+    <div class="nav-link" data-pg="settings" data-role="admin" onclick="go('settings',this)">
+      <span class="nav-ico">⊙</span> Company Settings
+    </div>
+    <div class="nav-link" data-pg="backup" data-role="admin" onclick="go('backup',this)">
+      <span class="nav-ico">◫</span> Backup / Restore
+    </div>
+    <div class="nav-link" data-pg="auditlog" data-role="admin,manager" onclick="go('auditlog',this)">
+      <span class="nav-ico">≣</span> Audit Log
+    </div>
+
+  </nav>
+
+  <div class="sidebar-foot">
+    <div class="user-chip" id="user-chip" style="cursor:pointer" title="Click to logout" onclick="logout()">AK</div>
+    <div style="flex:1">
+      <div class="user-nm" id="user-name">Admin</div>
+      <div class="user-rl" id="user-role">ADMIN</div>
+    </div>
+    <div onclick="logout()" title="Sign Out"
+         style="width:26px;height:26px;border-radius:2px;background:var(--navy-700);border:1px solid var(--border);
+                display:flex;align-items:center;justify-content:center;cursor:pointer;
+                color:var(--text-muted);transition:all 0.15s;flex-shrink:0"
+         onmouseover="this.style.borderColor='var(--border-3)';this.style.color='#f87171'"
+         onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+        <polyline points="16 17 21 12 16 7"/>
+        <line x1="21" y1="12" x2="9" y2="12"/>
+      </svg>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══════════════════════════════════════════ MAIN -->
+<div class="main">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="tb-path">
+      <span class="tb-mod" id="tb-mod">Freight ERP</span>
+      <span class="tb-sep">›</span>
+      <span class="tb-cur" id="tb-cur">Dashboard</span>
+    </div>
+    <div class="tb-right">
+      <div style="position:relative">
+        <div class="tb-search">
+          <svg width="11" height="11" fill="none" stroke="var(--text-muted)" stroke-width="1.8" viewBox="0 0 16 16"><circle cx="7" cy="7" r="5"/><path d="m11 11 3 3"/></svg>
+          <input type="text" placeholder="Search LR, party, vehicle…" id="globalSearch" autocomplete="off">
+        </div>
+        <!-- NEW: Global Search Results Dropdown -->
+        <div id="searchResults" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:500;
+             background:var(--navy-850);border:1px solid var(--border-2);border-radius:2px;
+             box-shadow:0 12px 32px rgba(0,0,0,.6);max-height:320px;overflow-y:auto;min-width:300px"></div>
+      </div>
+      <div class="live-clock" id="clock"></div>
+      <div class="tb-btn" onclick="toggleNotif()" style="position:relative">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="notif-count" id="notif-badge">0</span>
+        <!-- Notification Panel -->
+        <div class="notif-panel" id="notifPanel">
+          <div class="notif-hd">Alerts <span style="font-size:9px;color:var(--text-muted);font-family:var(--font-mono)">0 ALERTS</span></div>
+          <div style="padding:16px;text-align:center;font-size:11.5px;color:var(--text-muted)">Loading...</div>
+        </div>
+      </div>
+      <div class="tb-btn" onclick="go('settings',null)">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════ PAGES -->
+  <div class="content">
+
+    <!-- ══════════════════════ DASHBOARD -->
+    <div class="pg on" id="pg-dashboard">
+      <div class="ph">
+        <div class="ph-l">
+          <div class="ph-title">OPERATIONS DASHBOARD</div>
+          <div class="ph-sub" id="dash-date"></div>
+        </div>
+        <div class="ph-r">
+          <button class="btn btn-sec btn-sm" onclick="doBackup()">↓ BACKUP</button>
+          <button class="btn btn-pri" onclick="M('bookingModal')">+ NEW BOOKING</button>
+        </div>
+      </div>
+
+      <!-- Alerts -->
+      <div id="dash-alerts"></div>
+
+      <!-- Stepper -->
+      <div class="stepper">
+        <div class="step on" onclick="go('bookings',null)"><div class="step-n">1</div><div class="step-lbl">Booking</div></div>
+        <div class="step-arrow"></div>
+        <div class="step" onclick="go('lr',null)"><div class="step-n">2</div><div class="step-lbl">LR Entry</div></div>
+        <div class="step-arrow"></div>
+        <div class="step" onclick="go('manifest',null)"><div class="step-n">3</div><div class="step-lbl">Manifest</div></div>
+        <div class="step-arrow"></div>
+        <div class="step" onclick="go('dispatch',null)"><div class="step-n">4</div><div class="step-lbl">Dispatch</div></div>
+        <div class="step-arrow"></div>
+        <div class="step" onclick="go('delivery',null)"><div class="step-n">5</div><div class="step-lbl">Delivery</div></div>
+        <div class="step-arrow"></div>
+        <div class="step" onclick="go('ledger',null)"><div class="step-n">6</div><div class="step-lbl">Accounts</div></div>
+        <div class="step-arrow"></div>
+        <div class="step" onclick="go('reports',null)"><div class="step-n">7</div><div class="step-lbl">Reports</div></div>
+      </div>
+
+      <!-- KPIs -->
+      <div class="kpi-row">
+        <div class="kpi" style="--k-color:var(--accent-bright)" onclick="go('lr',null)">
+          <div class="kpi-lbl">Total LRs (Today)</div>
+          <div class="kpi-val" id="kpi-lr-count">—</div>
+          <div class="kpi-meta">created today</div>
+        </div>
+        <div class="kpi" style="--k-color:var(--green)" onclick="go('delivery',null)">
+          <div class="kpi-lbl">Delivered Today</div>
+          <div class="kpi-val" id="kpi-delivered" style="color:#4ade80">—</div>
+          <div class="kpi-meta">completed deliveries</div>
+        </div>
+        <div class="kpi" style="--k-color:var(--amber)" onclick="go('dispatch',null)">
+          <div class="kpi-lbl">In Transit</div>
+          <div class="kpi-val" id="kpi-in-transit" style="color:#fbbf24">—</div>
+          <div class="kpi-meta">active LRs</div>
+        </div>
+        <div class="kpi" style="--k-color:var(--gold)">
+          <div class="kpi-lbl">Freight Revenue</div>
+          <div class="kpi-val" id="kpi-revenue">—</div>
+          <div class="kpi-meta">all time</div>
+        </div>
+        <div class="kpi" style="--k-color:var(--red)" onclick="go('ledger',null)">
+          <div class="kpi-lbl">Outstanding</div>
+          <div class="kpi-val" id="kpi-outstanding" style="color:#f87171">—</div>
+          <div class="kpi-meta">to be collected</div>
+        </div>
+        <div class="kpi" style="--k-color:var(--cyan)">
+          <div class="kpi-lbl">Trips Active</div>
+          <div class="kpi-val" id="kpi-trips" style="color:#22d3ee">—</div>
+          <div class="kpi-meta">vehicles in transit</div>
+        </div>
+      </div>
+
+      <!-- Charts + Summary -->
+      <div class="col31" style="gap:16px;margin-bottom:18px">
+        <div class="panel">
+          <div class="panel-hd"><div class="panel-title">LRs — Last 7 Days</div></div>
+          <div class="panel-body" style="height:160px"><canvas id="dash-chart-lr"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="panel-hd"><div class="panel-title">LR Status Mix</div></div>
+          <div class="panel-body" style="height:160px"><canvas id="dash-chart-status"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Table + Summary -->
+      <div class="col31" style="gap:16px">
+        <div class="panel">
+          <div class="panel-hd">
+            <div class="panel-title">Recent Lorry Receipts</div>
+            <button class="btn btn-ghost btn-sm" onclick="go('lr',null)">VIEW ALL</button>
+          </div>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr>
+                <th>LR NUMBER</th><th>DATE</th><th>CONSIGNOR</th><th>CONSIGNEE</th>
+                <th>VEHICLE</th><th>PAYMENT</th><th class="r">AMOUNT</th><th>STATUS</th>
+              </tr></thead>
+              <tbody id="dash-recent-lr">
+                <tr><td colspan="8" class="empty"><div class="empty-ico">📋</div><div class="empty-txt">Loading...</div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- Right summary -->
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="panel">
+            <div class="panel-hd"><div class="panel-title">Today Summary</div></div>
+            <div class="panel-body" style="display:flex;flex-direction:column;gap:8px">
+              <div class="row sb"><span style="font-size:11.5px;color:var(--text-sec)">LRs Created</span><span class="td-num" id="dash-lr-today">—</span></div>
+              <div class="row sb"><span style="font-size:11.5px;color:var(--text-sec)">Manifests Dispatched</span><span class="td-num" id="dash-manifests-today">—</span></div>
+              <div class="row sb"><span style="font-size:11.5px;color:var(--text-sec)">Deliveries Done</span><span class="td-num" id="dash-delivered-today">—</span></div>
+              <div class="sep"></div>
+              <div class="row sb"><span style="font-size:11.5px;color:var(--text-sec)">Cash In</span><span style="font-family:var(--font-mono);color:#4ade80;font-size:12px" id="dash-cash-in">—</span></div>
+              <div class="row sb"><span style="font-size:11.5px;color:var(--text-sec)">Cash Out</span><span style="font-family:var(--font-mono);color:#f87171;font-size:12px" id="dash-cash-out">—</span></div>
+              <div class="row sb"><span style="font-size:11.5px;color:var(--text-sec)">Net</span><span style="font-family:var(--font-mono);color:var(--accent-bright);font-size:13px;font-weight:600" id="dash-net">—</span></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-hd"><div class="panel-title">E-Way Status</div></div>
+            <div class="panel-body" style="display:flex;flex-direction:column;gap:7px">
+              <div class="row sb"><span style="font-size:11.5px;color:var(--text-sec)">Valid</span><span style="font-family:var(--font-mono);color:#4ade80" id="eway-valid">—</span></div>
+              <div class="row sb"><span style="font-size:11.5px;color:var(--text-sec)">Expiring 24h</span><span style="font-family:var(--font-mono);color:#fbbf24" id="eway-expiring">—</span></div>
+              <div class="row sb"><span style="font-size:11.5px;color:var(--text-sec)">Expired</span><span style="font-family:var(--font-mono);color:#f87171;font-weight:700" id="eway-expired">—</span></div>
+              <button class="btn btn-ghost btn-sm" style="margin-top:4px" onclick="go('eway',null)">MANAGE E-WAY BILLS →</button>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-hd"><div class="panel-title">Top Outstanding</div></div>
+            <div class="panel-body" id="dash-outstanding-parties" style="display:flex;flex-direction:column;gap:4px">
+              <div style="color:var(--text-muted);font-size:11px">Loading...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- end dashboard -->
+
+    <!-- ══════════════════════ BOOKINGS -->
+    <div class="pg" id="pg-bookings">
+      <div class="ph">
+        <div class="ph-l"><div class="ph-title">BOOKINGS</div><div class="ph-sub">CONSIGNMENT BOOKING REGISTER</div></div>
+        <div class="ph-r"><button class="btn btn-pri" onclick="M('bookingModal')">+ NEW BOOKING</button></div>
+      </div>
+      <div class="panel">
+        <div class="fbar">
+          <div class="tb-search" style="width:220px"><svg width="11" height="11" fill="none" stroke="var(--text-muted)" stroke-width="1.8" viewBox="0 0 16 16"><circle cx="7" cy="7" r="5"/><path d="m11 11 3 3"/></svg>
+            <input type="text" id="bk-filter-search" placeholder="Search booking no…" oninput="resetPage('bookings');loadBookings()">
+          </div>
+          <select class="fsel" id="bk-filter-status" style="width:130px" onchange="resetPage('bookings');loadBookings()">
+            <option value="">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="lr_created">LR Created</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          <input type="date" class="fi" id="bk-filter-from" style="width:130px" onchange="resetPage('bookings');loadBookings()">
+          <input type="date" class="fi" id="bk-filter-to" style="width:130px" onchange="resetPage('bookings');loadBookings()">
+          <select class="fsel sel-branch" id="bk-filter-branch" style="width:140px" onchange="resetPage('bookings');loadBookings()">
+            <option value="">All Branches</option>
+          </select>
+        </div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>BOOKING NO.</th><th>DATE</th><th>CONSIGNOR</th><th>CONSIGNEE</th><th>FROM</th><th>TO</th><th>BRANCH</th><th>CREATED BY</th><th>STATUS</th><th>ACTIONS</th></tr></thead>
+          <tbody id="bookings-tbody">
+            <tr><td colspan="10" class="empty"><div class="empty-ico">📋</div><div class="empty-txt">Loading...</div></td></tr>
+          </tbody>
+        </table></div>
+        <div class="pag" id="pag-bookings"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════ LR REGISTER -->
+    <div class="pg" id="pg-lr">
+      <div class="ph">
+        <div class="ph-l"><div class="ph-title">LORRY RECEIPTS</div><div class="ph-sub" id="lr-subtitle">LR REGISTER</div></div>
+        <div class="ph-r">
+          <button class="btn btn-sec btn-sm" onclick="exportLRCSV()">↓ EXPORT CSV</button>
+          <button class="btn btn-pri" onclick="openLRModal()">+ NEW LR</button>
+        </div>
+      </div>
+      <!-- Bulk action bar -->
+      <div id="lr-bulk-bar" style="display:none;margin-bottom:10px;padding:10px 14px;background:var(--navy-800);border:1px solid var(--accent);border-radius:2px;display:flex;align-items:center;gap:10px">
+        <span style="font-family:var(--font-mono);font-size:9px;color:var(--accent-bright)">BULK ACTION</span>
+        <select class="fsel" id="lr-bulk-action" style="width:180px">
+          <option value="">Select action…</option>
+          <option value="delivered">Mark Delivered</option>
+          <option value="cancelled">Mark Cancelled</option>
+        </select>
+        <button class="btn btn-pri btn-sm" onclick="applyBulkAction()">APPLY</button>
+        <button class="btn btn-ghost btn-sm" onclick="document.querySelectorAll('.lr-sel').forEach(c=>c.checked=false);updateBulkBar()">CLEAR</button>
+      </div>
+      <div class="panel">
+        <div class="fbar">
+          <div class="tb-search" style="width:220px"><svg width="11" height="11" fill="none" stroke="var(--text-muted)" stroke-width="1.8" viewBox="0 0 16 16"><circle cx="7" cy="7" r="5"/><path d="m11 11 3 3"/></svg>
+            <input type="text" id="lr-filter-search" placeholder="LR no., party, vehicle…" oninput="resetPage('lr');loadLRRegister()">
+          </div>
+          <select class="fsel" id="lr-filter-status" style="width:120px" onchange="resetPage('lr');loadLRRegister()">
+            <option value="">All Status</option>
+            <option value="booked">Booked</option>
+            <option value="in_transit">In Transit</option>
+            <option value="delivered">Delivered</option>
+            <option value="partial">Partial</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          <select class="fsel" id="lr-filter-pay" style="width:120px" onchange="resetPage('lr');loadLRRegister()">
+            <option value="">All Payment</option>
+            <option value="paid">Paid</option>
+            <option value="to_pay">To Pay</option>
+            <option value="credit">Credit</option>
+            <option value="to_be_billed">To Be Billed</option>
+          </select>
+          <select class="fsel sel-branch" id="lr-filter-branch" style="width:130px" onchange="resetPage('lr');loadLRRegister()">
+            <option value="">All Branches</option>
+          </select>
+          <input type="date" class="fi" id="lr-filter-from" style="width:130px" onchange="resetPage('lr');loadLRRegister()">
+          <input type="date" class="fi" id="lr-filter-to" style="width:130px" onchange="resetPage('lr');loadLRRegister()">
+        </div>
+        <div class="tbl-wrap"><table>
+          <thead><tr>
+            <th style="width:32px"><input type="checkbox" onchange="document.querySelectorAll('.lr-sel').forEach(c=>c.checked=this.checked);updateBulkBar()"></th>
+            <th>LR NUMBER</th><th>DATE</th><th>CONSIGNOR</th><th>CONSIGNEE</th>
+            <th>ROUTE</th><th>VEHICLE</th><th>TYPE</th><th>PAYMENT</th>
+            <th class="r">FREIGHT</th><th class="r">TOTAL</th><th>E-WAY</th><th>STATUS</th><th>ACTIONS</th>
+          </tr></thead>
+          <tbody id="lr-tbody-main">
+            <tr><td colspan="14" class="empty"><div class="empty-ico">📄</div><div class="empty-txt">Loading...</div></td></tr>
+          </tbody>
+        </table></div>
+        <div class="rtotal">
+          <div class="rtt"><div class="rtt-lbl">Total Records</div><div class="rtt-val" id="lr-tot-records">—</div></div>
+          <div class="rtt"><div class="rtt-lbl">Total Freight</div><div class="rtt-val" id="lr-tot-freight">—</div></div>
+          <div class="rtt"><div class="rtt-lbl">Total GST</div><div class="rtt-val" id="lr-tot-gst">—</div></div>
+          <div class="rtt"><div class="rtt-lbl">Total Amount</div><div class="rtt-val" id="lr-tot-amount" style="color:var(--accent-bright)">—</div></div>
+        </div>
+        <div class="pag" id="pag-lr"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════ MANIFEST -->
+    <div class="pg" id="pg-manifest">
+      <div class="ph">
+        <div class="ph-l"><div class="ph-title">MANIFEST</div><div class="ph-sub">TRUCK LOAD ASSIGNMENT</div></div>
+        <div class="ph-r"><button class="btn btn-pri" onclick="M('manifestModal')">+ NEW MANIFEST</button></div>
+      </div>
+      <div class="panel">
+        <div class="fbar">
+          <select class="fsel" id="manifest-filter-status" style="width:120px" onchange="resetPage('manifest');loadManifest()">
+            <option value="">All Status</option>
+            <option value="draft">Draft</option>
+            <option value="dispatched">Dispatched</option>
+            <option value="completed">Completed</option>
+          </select>
+          <input type="date" class="fi" id="manifest-filter-date" style="width:130px" onchange="resetPage('manifest');loadManifest()">
+        </div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>MANIFEST NO.</th><th>DATE</th><th>VEHICLE</th><th>DRIVER</th><th>FROM BRANCH</th><th>TO BRANCH</th><th class="c">LR COUNT</th><th>STATUS</th><th>ACTIONS</th></tr></thead>
+          <tbody id="manifest-tbody">
+            <tr><td colspan="9" class="empty"><div class="empty-ico">🚛</div><div class="empty-txt">Loading...</div></td></tr>
+          </tbody>
+        </table></div>
+        <div class="pag" id="pag-manifest"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════ DISPATCH -->
+    <div class="pg" id="pg-dispatch">
+      <div class="ph">
+        <div class="ph-l"><div class="ph-title">DISPATCH</div><div class="ph-sub">LOCK MANIFEST AND SEND TRUCK</div></div>
+      </div>
+      <div class="alert alert-i">Ready-to-dispatch manifests are listed below. Once dispatched, all assigned LRs are locked and set to IN TRANSIT. This action cannot be undone.</div>
+      <div class="panel">
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>MANIFEST NO.</th><th>VEHICLE</th><th>DRIVER</th><th>LR COUNT</th><th>TOTAL WEIGHT</th><th>ROUTE</th><th>STATUS</th><th>ACTIONS</th></tr></thead>
+          <tbody id="dispatch-tbody">
+            <tr><td colspan="8" class="empty"><div class="empty-ico">✅</div><div class="empty-txt">Loading...</div></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════ DELIVERY -->
+    <div class="pg" id="pg-delivery">
+      <div class="ph">
+        <div class="ph-l"><div class="ph-title">DELIVERY</div><div class="ph-sub" id="delivery-subtitle">PENDING DELIVERIES</div></div>
+      </div>
+      <div class="panel">
+        <div class="fbar">
+          <div class="tb-search" style="width:220px"><svg width="11" height="11" fill="none" stroke="var(--text-muted)" stroke-width="1.8" viewBox="0 0 16 16"><circle cx="7" cy="7" r="5"/><path d="m11 11 3 3"/></svg>
+            <input type="text" id="delivery-filter-search" placeholder="Search LR, consignee…" oninput="resetPage('delivery');loadDelivery()">
+          </div>
+          <select class="fsel sel-branch" id="delivery-filter-branch" style="width:130px" onchange="resetPage('delivery');loadDelivery()">
+            <option value="">All Branches</option>
+          </select>
+        </div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>LR NUMBER</th><th>CONSIGNEE</th><th>DESTINATION</th><th class="c">TOTAL ITEMS</th><th class="c">DELIVERED</th><th class="c">PENDING</th><th class="c">DAMAGED</th><th class="c">SHORTAGE</th><th>STATUS</th><th>ACTIONS</th></tr></thead>
+          <tbody id="delivery-tbody">
+            <tr><td colspan="10" class="empty"><div class="empty-ico">📦</div><div class="empty-txt">Loading...</div></td></tr>
+          </tbody>
+        </table></div>
+        <div class="pag" id="pag-delivery"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════ PARTY LEDGER -->
+    <div class="pg" id="pg-ledger">
+      <div class="ph">
+        <div class="ph-l"><div class="ph-title">PARTY LEDGER</div><div class="ph-sub" id="ledger-total-outstanding">OUTSTANDING · —</div></div>
+        <div class="ph-r"><button class="btn btn-sec btn-sm" onclick="exportLedgerCSV()">↓ EXPORT</button></div>
+      </div>
+      <div class="col13" style="gap:16px">
+        <div class="panel">
+          <div class="panel-hd"><div class="panel-title">Outstanding Summary</div></div>
+          <div class="tbl-wrap"><table>
+            <thead><tr><th>PARTY NAME</th><th>TYPE</th><th class="r">DEBIT</th><th class="r">CREDIT</th><th class="r">BALANCE</th><th>CREDIT LIMIT</th></tr></thead>
+            <tbody id="ledger-summary-tbody">
+              <tr><td colspan="6" class="empty"><div class="empty-txt">Loading...</div></td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <div class="panel">
+          <div class="panel-hd">
+            <div class="panel-title">Ledger Detail</div>
+            <select class="fsel" style="width:160px;padding:5px 8px" id="ledgerPartySelect">
+              <option value="">— Select Party —</option>
+            </select>
+          </div>
+          <div class="tbl-wrap"><table>
+            <thead><tr><th>DATE</th><th>REF</th><th>TYPE</th><th class="r">DEBIT</th><th class="r">CREDIT</th><th class="r">BALANCE</th></tr></thead>
+            <tbody id="ledgerDetail">
+              <tr><td colspan="6" class="empty"><div class="empty-txt">Select a party to view ledger</div></td></tr>
+            </tbody>
+          </table></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════ PAYMENTS -->
+    <div class="pg" id="pg-payments">
+      <div class="ph">
+        <div class="ph-l"><div class="ph-title">PAYMENTS</div><div class="ph-sub">RECEIPTS & DISBURSEMENTS</div></div>
+        <div class="ph-r">
+          <button class="btn btn-sec btn-sm" onclick="exportPaymentsCSV()">↓ EXPORT</button>
+          <button class="btn btn-pri" onclick="M('paymentModal')">+ ADD PAYMENT</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="fbar">
+          <input type="date" class="fi" id="pmt-filter-from" style="width:130px" onchange="resetPage('payments');loadPayments()">
+          <input type="date" class="fi" id="pmt-filter-to" style="width:130px" onchange="resetPage('payments');loadPayments()">
+          <select class="fsel" id="pmt-filter-mode" style="width:120px" onchange="resetPage('payments');loadPayments()">
+            <option value="">All Modes</option>
+            <option value="cash">Cash</option>
+            <option value="neft">NEFT</option>
+            <option value="cheque">Cheque</option>
+            <option value="upi">UPI</option>
+            <option value="rtgs">RTGS</option>
+          </select>
+          <select class="fsel sel-party" id="pmt-filter-party" style="width:160px" onchange="resetPage('payments');loadPayments()">
+            <option value="">All Parties</option>
+          </select>
+        </div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>DATE</th><th>PARTY</th><th class="r">AMOUNT</th><th>MODE</th><th>REF. NO.</th><th>MAPPED LRs</th><th>BRANCH</th><th>ACTIONS</th></tr></thead>
+          <tbody id="payments-tbody">
+            <tr><td colspan="8" class="empty"><div class="empty-ico">💳</div><div class="empty-txt">Loading...</div></td></tr>
+          </tbody>
+        </table></div>
+        <div class="pag" id="pag-payments"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════ DAYBOOK -->
+    <div class="pg" id="pg-daybook">
+      <div class="ph">
+        <div class="ph-l"><div class="ph-title">DAYBOOK / CASHBOOK</div><div class="ph-sub">DAILY FINANCIAL SUMMARY</div></div>
+        <div class="ph-r" style="display:flex;gap:8px;align-items:center">
+          <button class="btn btn-sec btn-sm" onclick="exportDaybookCSV()">↓ EXPORT</button>
+          <input type="date" class="fi" id="daybook-date" style="width:140px" onchange="loadDaybook(this.value)">
+        </div>
+      </div>
+      <div class="kpi-row" style="grid-template-columns:repeat(3,1fr);margin-bottom:18px">
+        <div class="kpi" style="--k-color:var(--green)"><div class="kpi-lbl">Total Income</div><div class="kpi-val" id="daybook-kpi-income" style="color:#4ade80">—</div></div>
+        <div class="kpi" style="--k-color:var(--red)"><div class="kpi-lbl">Total Expense</div><div class="kpi-val" id="daybook-kpi-expense" style="color:#f87171">—</div></div>
+        <div class="kpi" style="--k-color:var(--accent-bright)"><div class="kpi-lbl">Net Cash Flow</div><div class="kpi-val" id="daybook-kpi-net" style="color:var(--accent-bright)">—</div></div>
+      </div>
+      <div class="panel">
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>DATE</th><th>TYPE</th><th>CATEGORY / REF</th><th class="r">AMOUNT</th><th>NOTES</th><th>BRANCH</th></tr></thead>
+          <tbody id="daybook-tbody">
+            <tr><td colspan="6" class="empty"><div class="empty-ico">📖</div><div class="empty-txt">Loading...</div></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════ EXPENSES -->
+    <div class="pg" id="pg-expenses">
+      <div class="ph">
+        <div class="ph-l"><div class="ph-title">EXPENSES</div><div class="ph-sub">TRIP & OPERATIONAL EXPENSES</div></div>
+        <div class="ph-r">
+          <button class="btn btn-sec btn-sm" onclick="exportExpensesCSV()">↓ EXPORT</button>
+          <button class="btn btn-pri" onclick="M('expenseModal')">+ ADD EXPENSE</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="fbar">
+          <input type="date" class="fi" id="exp-filter-from" style="width:130px" onchange="resetPage('expenses');loadExpenses()">
+          <input type="date" class="fi" id="exp-filter-to" style="width:130px" onchange="resetPage('expenses');loadExpenses()">
+          <select class="fsel" id="exp-filter-cat" style="width:140px" onchange="resetPage('expenses');loadExpenses()">
+            <option value="">All Types</option>
+            <option value="Fuel">Fuel</option>
+            <option value="Toll">Toll</option>
+            <option value="Driver Allowance">Driver Allowance</option>
+            <option value="Repair">Repair</option>
+            <option value="Weighment">Weighment</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>DATE</th><th>REF</th><th>TYPE</th><th class="r">AMOUNT</th><th>NOTES</th><th>BRANCH</th></tr></thead>
+          <tbody id="expenses-tbody">
+            <tr><td colspan="6" class="empty"><div class="empty-ico">💸</div><div class="empty-txt">Loading...</div></td></tr>
+          </tbody>
+        </table></div>
+        <div class="pag" id="pag-expenses"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════ E-WAY BILLS -->
+    <div class="pg" id="pg-eway">
+      <div class="ph">
+        <div class="ph-l"><div class="ph-title">E-WAY BILL MONITOR</div><div class="ph-sub">COMPLIANCE TRACKER — AUTO ALERTS ENABLED</div></div>
+      </div>
+      <div class="eway-bar">
+        <div class="eway-cell"><div class="num" id="eway-stat-valid" style="color:#4ade80">—</div><div class="lbl">Valid Bills</div></div>
+        <div class="eway-cell"><div class="num" id="eway-stat-expiring" style="color:#f59e0b">—</div><div class="lbl">Expiring &lt;24h</div></div>
+        <div class="eway-cell"><div class="num" id="eway-stat-expired" style="color:#f87171">—</div><div class="lbl">Expired</div></div>
+        <div class="eway-cell"><div class="num" id="eway-stat-noeway" style="color:var(--text-muted)">—</div><div class="lbl">No E-Way</div></div>
+      </div>
+      <div id="eway-alerts"></div>
+      <div class="panel">
+        <div class="fbar">
+          <select class="fsel" id="eway-filter-status" style="width:120px" onchange="resetPage('eway');loadEway()">
+            <option value="">All Status</option>
+            <option value="valid">Valid</option>
+            <option value="expiring">Expiring</option>
+            <option value="expired">Expired</option>
+          </select>
+        </div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>LR NUMBER</th><th>E-WAY NUMBER</th><th>CONSIGNOR</th><th>ISSUE DATE</th><th>EXPIRY DATE</th><th>TIME LEFT</th><th>STATUS</th><th>VEHICLE</th><th>ROUTE</th><th>ACTIONS</th></tr></thead>
+          <tbody id="eway-tbody">
+            <tr><td colspan="10" class="empty"><div class="empty-ico">⬡</div><div class="empty-txt">Loading...</div></td></tr>
+          </tbody>
+        </table></div>
+        <div class="pag" id="pag-eway"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════ REPORTS -->
+    <div class="pg" id="pg-reports">
+      <div class="ph">
+        <div class="ph-l"><div class="ph-title">REPORTS</div><div class="ph-sub">BUSINESS INTELLIGENCE</div></div>
+        <div class="ph-r">
+          <button class="btn btn-sec btn-sm" onclick="exportReportCSV()">↓ CSV</button>
+          <button class="btn btn-ghost btn-sm" onclick="window.print()">PRINT</button>
+        </div>
+      </div>
+      <div class="inlinebox mb14">
+        <div class="fgrid g5" style="gap:10px;align-items:end">
+          <div class="fg"><label>REPORT TYPE</label>
+            <select class="fsel" id="reportType" onchange="switchReport()">
+              <option value="lr">LR Register</option>
+              <option value="booking">Booking Report</option>
+              <option value="manifest">Manifest Report</option>
+              <option value="delivery">Delivery Report</option>
+              <option value="outstanding">Outstanding</option>
+              <option value="daybook">Daybook</option>
+              <option value="cashbook">Cashbook</option>
+              <option value="expense">Expense Report</option>
+              <option value="profit">Trip Profit</option>
+              <option value="broker">Broker Report</option>
+              <option value="branch">Branch Report</option>
+              <option value="eway">E-Way Report</option>
+            </select>
+          </div>
+          <div class="fg"><label>FROM DATE</label><input type="date" class="fi" id="report-from"></div>
+          <div class="fg"><label>TO DATE</label><input type="date" class="fi" id="report-to"></div>
+          <div class="fg"><label>BRANCH</label><select class="fsel sel-branch" id="report-branch"><option value="">All Branches</option></select></div>
+          <button class="btn btn-pri" style="align-self:flex-end" onclick="resetPage('reports');loadReport()">GENERATE</button>
+        </div>
+      </div>
+      <div class="panel" id="reportPanel">
+        <div class="panel-hd"><div class="panel-title" id="reportTitle">LR REGISTER</div></div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>LR NUMBER</th><th>DATE</th><th>CONSIGNOR</th><th>CONSIGNEE</th><th>ROUTE</th><th>VEH.</th><th>PAYMENT</th><th class="r">FREIGHT</th><th class="r">GST</th><th class="r">TOTAL</th><th>STATUS</th></tr></thead>
+          <tbody id="report-tbody">
+            <tr><td colspan="11" class="empty"><div class="empty-ico">◱</div><div class="empty-txt">Select a report type and click GENERATE</div></td></tr>
+          </tbody>
+        </table></div>
+        <div class="rtotal" id="report-rtotal" style="display:none"></div>
+        <div class="pag" id="pag-reports"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════ USERS -->
+    <div class="pg" id="pg-users">
+      <div class="ph">
+        <div class="ph-l"><div class="ph-title">USERS & ROLES</div><div class="ph-sub">ROLE-BASED ACCESS CONTROL</div></div>
+        <div class="ph-r"><button class="btn btn-pri" onclick="M('userModal')">+ ADD USER</button></div>
+      </div>
+      <div class="alert alert-i">Access is branch-restricted. Admin sees all data. Manager/Operator/Accountant see only their assigned branch.</div>
+      <div class="panel">
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>NAME</th><th>EMAIL</th><th>MOBILE</th><th>ROLE</th><th>BRANCH</th><th>STATUS</th><th>LAST LOGIN</th><th>ACTIONS</th></tr></thead>
+          <tbody id="users-tbody">
+            <tr><td colspan="8" class="empty"><div class="empty-ico">◉</div><div class="empty-txt">Loading...</div></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════ MASTERS -->
+    <div class="pg" id="pg-masters">
+      <div class="ph">
+        <div class="ph-l"><div class="ph-title">MASTERS</div><div class="ph-sub">REFERENCE DATA CONFIGURATION</div></div>
+      </div>
+      <div class="tabs" id="masterTabs">
+        <div class="tab on" onclick="switchMaster('branches',this)">BRANCHES</div>
+        <div class="tab" onclick="switchMaster('parties',this)">PARTIES</div>
+        <div class="tab" onclick="switchMaster('drivers',this)">DRIVERS</div>
+        <div class="tab" onclick="switchMaster('vehicles',this)">VEHICLES</div>
+        <div class="tab" onclick="switchMaster('brokers',this)">BROKERS</div>
+        <div class="tab" onclick="switchMaster('rates',this)">RATE CHART</div>
+        <div class="tab" onclick="switchMaster('series',this)">NUMBER SERIES</div>
+      </div>
+
+      <!-- Branches -->
+      <div id="m-branches" class="panel">
+        <div class="panel-hd"><div class="panel-title">BRANCHES</div><button class="btn btn-pri btn-sm" onclick="openBranchModal()">+ ADD BRANCH</button></div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>BRANCH NAME</th><th>CITY</th><th>ADDRESS</th><th>PHONE</th><th>STATUS</th><th>ACTIONS</th></tr></thead>
+          <tbody id="branches-tbody"><tr><td colspan="6" class="empty"><div class="empty-txt">Loading...</div></td></tr></tbody>
+        </table></div>
+      </div>
+
+      <!-- Parties -->
+      <div id="m-parties" style="display:none" class="panel">
+        <div class="panel-hd">
+          <div class="panel-title">PARTIES</div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <div class="tb-search" style="width:200px"><svg width="11" height="11" fill="none" stroke="var(--text-muted)" stroke-width="1.8" viewBox="0 0 16 16"><circle cx="7" cy="7" r="5"/><path d="m11 11 3 3"/></svg>
+              <input type="text" id="party-filter-search" placeholder="Search name…" oninput="resetPage('parties_master');loadMastersParties()">
+            </div>
+            <select class="fsel" id="party-filter-type" style="width:120px" onchange="resetPage('parties_master');loadMastersParties()">
+              <option value="">All Types</option>
+              <option value="consignor">Consignor</option>
+              <option value="consignee">Consignee</option>
+              <option value="both">Both</option>
+            </select>
+            <button class="btn btn-pri btn-sm" onclick="M('partyModal')">+ ADD PARTY</button>
+          </div>
+        </div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>PARTY NAME</th><th>TYPE</th><th>MOBILE</th><th>GST NUMBER</th><th>CREDIT LIMIT</th><th>OUTSTANDING</th><th>ACTIONS</th></tr></thead>
+          <tbody id="parties-master-tbody"><tr><td colspan="7" class="empty"><div class="empty-txt">Loading...</div></td></tr></tbody>
+        </table></div>
+        <div class="pag" id="pag-parties-master"></div>
+      </div>
+
+      <!-- Drivers -->
+      <div id="m-drivers" style="display:none" class="panel">
+        <div class="panel-hd"><div class="panel-title">DRIVERS</div><button class="btn btn-pri btn-sm" onclick="openDriverModal()">+ ADD DRIVER</button></div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>NAME</th><th>MOBILE</th><th>LICENSE NO.</th><th>LICENSE EXPIRY</th><th>STATUS</th><th>ACTIONS</th></tr></thead>
+          <tbody id="drivers-master-tbody"><tr><td colspan="6" class="empty"><div class="empty-txt">Loading...</div></td></tr></tbody>
+        </table></div>
+        <div class="pag" id="pag-drivers-master"></div>
+      </div>
+
+      <!-- Vehicles -->
+      <div id="m-vehicles" style="display:none" class="panel">
+        <div class="panel-hd"><div class="panel-title">VEHICLES</div><button class="btn btn-pri btn-sm" onclick="openVehicleModal()">+ ADD VEHICLE</button></div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>VEHICLE NO.</th><th>OWNER NAME</th><th>MOBILE</th><th>TYPE</th><th>STATUS</th><th>ACTIONS</th></tr></thead>
+          <tbody id="vehicles-master-tbody"><tr><td colspan="6" class="empty"><div class="empty-txt">Loading...</div></td></tr></tbody>
+        </table></div>
+        <div class="pag" id="pag-vehicles-master"></div>
+      </div>
+
+      <!-- Brokers -->
+      <div id="m-brokers" style="display:none" class="panel">
+        <div class="panel-hd"><div class="panel-title">BROKERS</div><button class="btn btn-pri btn-sm" onclick="openBrokerModal()">+ ADD BROKER</button></div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>BROKER NAME</th><th>MOBILE</th><th>COMMISSION %</th><th>STATUS</th><th>ACTIONS</th></tr></thead>
+          <tbody id="brokers-tbody"><tr><td colspan="5" class="empty"><div class="empty-txt">Loading...</div></td></tr></tbody>
+        </table></div>
+      </div>
+
+      <!-- Rate Chart -->
+      <div id="m-rates" style="display:none" class="panel">
+        <div class="panel-hd"><div class="panel-title">RATE CHART (₹/KG)</div><button class="btn btn-pri btn-sm" onclick="openRateModal()">+ ADD RATE</button></div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>FROM</th><th>TO</th><th class="r">RATE/KG</th><th class="r">MIN CHARGE</th><th>EFFECTIVE DATE</th><th>ACTIONS</th></tr></thead>
+          <tbody id="rates-tbody"><tr><td colspan="6" class="empty"><div class="empty-txt">Loading...</div></td></tr></tbody>
+        </table></div>
+      </div>
+
+      <!-- Number Series -->
+      <div id="m-series" style="display:none" class="panel">
+        <div class="panel-hd"><div class="panel-title">NUMBER SERIES</div></div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>MODULE</th><th>PREFIX</th><th>LAST NUMBER</th><th>NEXT NUMBER</th><th>BRANCH</th><th>ACTIONS</th></tr></thead>
+          <tbody id="series-tbody"><tr><td colspan="6" class="empty"><div class="empty-txt">Loading...</div></td></tr></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════ COMPANY SETTINGS -->
+    <div class="pg" id="pg-settings">
+      <div class="ph">
+        <div class="ph-l"><div class="ph-title">COMPANY SETTINGS</div><div class="ph-sub">CONFIGURE YOUR BUSINESS PROFILE</div></div>
+        <div class="ph-r"><button class="btn btn-pri" onclick="saveSettings()">SAVE CHANGES</button></div>
+      </div>
+      <div class="col2">
+        <div class="panel">
+          <div class="panel-hd"><div class="panel-title">Company Profile</div></div>
+          <div class="panel-body">
+            <div class="fgrid g2" style="gap:14px">
+              <div class="fg sf"><label>COMPANY NAME <span class="req">*</span></label><input class="fi" id="s-name" placeholder="Your Company Name"></div>
+              <div class="fg sf"><label>ADDRESS</label><textarea class="fta" id="s-addr" rows="2" placeholder="Full registered address"></textarea></div>
+              <div class="fg"><label>PHONE</label><input class="fi" id="s-phone" placeholder="+91 XXXXX XXXXX"></div>
+              <div class="fg"><label>EMAIL</label><input class="fi" id="s-email" placeholder="info@company.com"></div>
+              <div class="fg"><label>GSTIN</label><input class="fi" id="s-gst" placeholder="27XXXXX1234A1Z5" style="font-family:var(--font-mono)"></div>
+              <div class="fg"><label>PAN</label><input class="fi" id="s-pan" placeholder="XXXXX1234X" style="font-family:var(--font-mono)"></div>
+              <div class="fg sf"><label>LOGO URL</label><input class="fi" id="s-logo" placeholder="https://…"></div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-hd"><div class="panel-title">Print & Format Settings</div></div>
+          <div class="panel-body" style="display:flex;flex-direction:column;gap:10px">
+            <div class="toggle-row"><span class="toggle-lbl">Show Amount on LR Print (Default)</span><label class="sw"><input type="checkbox" id="s-showamt" checked><span class="sw-track"></span></label></div>
+            <div class="toggle-row"><span class="toggle-lbl">Enable GST by Default</span><label class="sw"><input type="checkbox" id="s-gstdef"><span class="sw-track"></span></label></div>
+            <div class="toggle-row"><span class="toggle-lbl">Auto E-Way Expiry Alerts</span><label class="sw"><input type="checkbox" checked><span class="sw-track"></span></label></div>
+            <div class="toggle-row"><span class="toggle-lbl">Duplicate Booking Detection</span><label class="sw"><input type="checkbox" checked><span class="sw-track"></span></label></div>
+            <div class="toggle-row"><span class="toggle-lbl">Credit Limit Warnings</span><label class="sw"><input type="checkbox" checked><span class="sw-track"></span></label></div>
+            <div class="sep"></div>
+            <div class="fg"><label>DEFAULT GST %</label><select class="fsel" id="s-gstpct"><option value="5">5%</option><option value="12">12%</option><option value="18" selected>18%</option><option value="28">28%</option></select></div>
+            <div class="fg"><label>FINANCIAL YEAR START</label><select class="fsel"><option>April (India)</option><option>January</option></select></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NEW: APPEARANCE SECTION -->
+      <div class="panel" style="margin-top:18px">
+        <div class="panel-hd"><div class="panel-title">APPEARANCE</div><span style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted)">THEME & COLOUR CUSTOMIZATION</span></div>
+        <div class="panel-body">
+          <!-- Preset Theme Grid -->
+          <div style="font-family:var(--font-mono);font-size:8.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px">PRESET THEMES</div>
+          <div id="theme-preset-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px">
+            <!-- Populated by buildThemeUI() in core.js -->
+          </div>
+          <div class="divider"></div>
+          <!-- Custom Theme Builder -->
+          <div style="font-family:var(--font-mono);font-size:8.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;margin-top:16px">BUILD YOUR OWN THEME</div>
+          <div class="fgrid g3" style="gap:12px;margin-bottom:14px">
+            <div class="fg"><label>PRIMARY BACKGROUND</label>
+              <div style="display:flex;gap:8px;align-items:center">
+                <input type="color" id="cp-bg" value="#060d1a" oninput="ThemeEngine.fromCustomPickers()" style="width:36px;height:32px;border:none;border-radius:2px;cursor:pointer;background:transparent">
+                <input class="fi" type="text" value="#060d1a" style="font-family:var(--font-mono)" oninput="document.getElementById('cp-bg').value=this.value;ThemeEngine.fromCustomPickers()">
+              </div>
+            </div>
+            <div class="fg"><label>SIDEBAR BACKGROUND</label>
+              <div style="display:flex;gap:8px;align-items:center">
+                <input type="color" id="cp-side" value="#03070f" oninput="ThemeEngine.fromCustomPickers()" style="width:36px;height:32px;border:none;border-radius:2px;cursor:pointer;background:transparent">
+                <input class="fi" type="text" value="#03070f" style="font-family:var(--font-mono)" oninput="document.getElementById('cp-side').value=this.value;ThemeEngine.fromCustomPickers()">
+              </div>
+            </div>
+            <div class="fg"><label>ACCENT COLOUR</label>
+              <div style="display:flex;gap:8px;align-items:center">
+                <input type="color" id="cp-acc" value="#2563eb" oninput="ThemeEngine.fromCustomPickers()" style="width:36px;height:32px;border:none;border-radius:2px;cursor:pointer;background:transparent">
+                <input class="fi" type="text" value="#2563eb" style="font-family:var(--font-mono)" oninput="document.getElementById('cp-acc').value=this.value;ThemeEngine.fromCustomPickers()">
+              </div>
+            </div>
+            <div class="fg"><label>PRIMARY TEXT</label>
+              <div style="display:flex;gap:8px;align-items:center">
+                <input type="color" id="cp-txt" value="#e0eaf4" oninput="ThemeEngine.fromCustomPickers()" style="width:36px;height:32px;border:none;border-radius:2px;cursor:pointer;background:transparent">
+                <input class="fi" type="text" value="#e0eaf4" style="font-family:var(--font-mono)" oninput="document.getElementById('cp-txt').value=this.value;ThemeEngine.fromCustomPickers()">
+              </div>
+            </div>
+            <div class="fg"><label>SUCCESS COLOUR</label>
+              <div style="display:flex;gap:8px;align-items:center">
+                <input type="color" id="cp-succ" value="#16a34a" oninput="ThemeEngine.fromCustomPickers()" style="width:36px;height:32px;border:none;border-radius:2px;cursor:pointer;background:transparent">
+                <input class="fi" type="text" value="#16a34a" style="font-family:var(--font-mono)" oninput="document.getElementById('cp-succ').value=this.value;ThemeEngine.fromCustomPickers()">
+              </div>
+            </div>
+            <div class="fg"><label>DANGER COLOUR</label>
+              <div style="display:flex;gap:8px;align-items:center">
+                <input type="color" id="cp-err" value="#dc2626" oninput="ThemeEngine.fromCustomPickers()" style="width:36px;height:32px;border:none;border-radius:2px;cursor:pointer;background:transparent">
+                <input class="fi" type="text" value="#dc2626" style="font-family:var(--font-mono)" oninput="document.getElementById('cp-err').value=this.value;ThemeEngine.fromCustomPickers()">
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-pri" onclick="ThemeEngine.save('custom',ThemeEngine.fromCustomPickers()||{})">SAVE CUSTOM THEME</button>
+            <button class="btn btn-ghost" onclick="ThemeEngine.reset()">RESET TO DEFAULT</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════ BACKUP -->
+    <div class="pg" id="pg-backup">
+      <div class="ph"><div class="ph-l"><div class="ph-title">BACKUP & RESTORE</div><div class="ph-sub">JSON-BASED · REAL SUPABASE DATA</div></div></div>
+      <div class="alert alert-w">Full restore OVERWRITES all existing data. Filtered restore MERGES without deleting existing records. Always download a backup before restoring.</div>
+      <div class="col2">
+        <div class="panel">
+          <div class="panel-hd"><div class="panel-title">CREATE BACKUP</div></div>
+          <div class="panel-body">
+            <div class="fg mb14"><label>BACKUP TYPE</label>
+              <select class="fsel" id="backupType" onchange="toggleBackupFilters()">
+                <option value="full">Full Backup — All Data All Branches</option>
+                <option value="filtered">Filtered Backup</option>
+              </select>
+            </div>
+            <div id="backupFilters" style="display:none">
+              <div class="sblk">
+                <div class="sblk-hd"><div class="sblk-title">FILTERS</div></div>
+                <div class="sblk-body">
+                  <div class="fgrid g2" style="gap:12px">
+                    <div class="fg"><label>FROM DATE</label><input type="date" class="fi" id="bk-from"></div>
+                    <div class="fg"><label>TO DATE</label><input type="date" class="fi" id="bk-to"></div>
+                    <div class="fg s2"><label>MODULES</label>
+                      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">
+                        <label style="display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--text-sec);cursor:pointer;text-transform:uppercase"><input type="checkbox" id="bk-lr" checked style="width:auto">Lorry Receipts</label>
+                        <label style="display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--text-sec);cursor:pointer;text-transform:uppercase"><input type="checkbox" id="bk-bk" checked style="width:auto">Bookings</label>
+                        <label style="display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--text-sec);cursor:pointer;text-transform:uppercase"><input type="checkbox" id="bk-mf" checked style="width:auto">Manifests</label>
+                        <label style="display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--text-sec);cursor:pointer;text-transform:uppercase"><input type="checkbox" id="bk-pm" checked style="width:auto">Payments</label>
+                        <label style="display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--text-sec);cursor:pointer;text-transform:uppercase"><input type="checkbox" id="bk-ms" style="width:auto">Masters</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-pri" style="width:100%;margin-top:4px" onclick="doBackup()">↓ DOWNLOAD BACKUP JSON</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-hd"><div class="panel-title">RESTORE BACKUP</div></div>
+          <div class="panel-body">
+            <div id="dropzone" style="border:1px dashed var(--border-2);border-radius:2px;padding:32px;text-align:center;cursor:pointer;transition:border-color 0.15s;position:relative"
+              ondragover="event.preventDefault();this.style.borderColor='var(--accent)'" ondragleave="this.style.borderColor='var(--border-2)'"
+              ondrop="handleDrop(event)">
+              <div style="font-family:var(--font-mono);font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px">DROP BACKUP FILE HERE</div>
+              <div style="font-size:11px;color:var(--text-muted)">or click to browse · .json files only</div>
+              <input type="file" accept=".json" onchange="readBackupFile(event)" style="position:absolute;inset:0;opacity:0;cursor:pointer">
+            </div>
+            <div id="restore-preview" style="display:none;margin-top:12px" class="inlinebox">
+              <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px">BACKUP DETECTED</div>
+              <div id="restore-info" style="font-size:12px;color:var(--text-pri)"></div>
+            </div>
+            <button class="btn btn-ghost" style="width:100%;margin-top:12px" id="restoreBtn" disabled onclick="doRestore()">RESTORE FROM FILE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════ AUDIT LOG -->
+    <div class="pg" id="pg-auditlog">
+      <div class="ph"><div class="ph-l"><div class="ph-title">AUDIT LOG</div><div class="ph-sub">ALL SYSTEM ACTIONS · IMMUTABLE</div></div></div>
+      <div class="panel">
+        <div class="fbar">
+          <input type="text" class="fi" id="audit-filter-user" placeholder="Filter by user…" style="width:150px" oninput="resetPage('auditlog');loadAuditLog()">
+          <select class="fsel" id="audit-filter-module" style="width:130px" onchange="resetPage('auditlog');loadAuditLog()">
+            <option value="">All Modules</option>
+            <option value="lr">LR</option>
+            <option value="booking">Booking</option>
+            <option value="manifest">Manifest</option>
+            <option value="payment">Payment</option>
+            <option value="expense">Expense</option>
+            <option value="settings">Settings</option>
+          </select>
+          <select class="fsel" id="audit-filter-action" style="width:130px" onchange="resetPage('auditlog');loadAuditLog()">
+            <option value="">All Actions</option>
+            <option value="CREATE">CREATE</option>
+            <option value="UPDATE">UPDATE</option>
+            <option value="DELETE">DELETE</option>
+            <option value="CANCEL">CANCEL</option>
+            <option value="DISPATCH">DISPATCH</option>
+          </select>
+          <input type="date" class="fi" id="audit-filter-date" style="width:130px" onchange="resetPage('auditlog');loadAuditLog()">
+        </div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>TIMESTAMP</th><th>USER</th><th>ACTION</th><th>MODULE</th><th>RECORD</th><th>DETAILS</th></tr></thead>
+          <tbody id="auditlog-tbody">
+            <tr><td colspan="6" class="empty"><div class="empty-ico">≣</div><div class="empty-txt">Loading...</div></td></tr>
+          </tbody>
+        </table></div>
+        <div class="pag" id="pag-auditlog"></div>
+      </div>
+    </div>
+
+  </div><!-- end content -->
+</div><!-- end main -->
+</div><!-- end shell -->
+
+<!-- ══════════════════════════════════════════════════════════ MODALS -->
+
+<!-- NEW: CUSTOM CONFIRM MODAL -->
+<div class="moverlay" id="confirmModal">
+<div class="modal mw-sm">
+  <div class="mhd">
+    <div class="mhd-title">CONFIRM ACTION</div>
+  </div>
+  <div class="mbody" style="padding:20px 18px">
+    <p id="confirmMsg" style="font-size:13px;color:var(--text-pri);line-height:1.5"></p>
+  </div>
+  <div class="mfoot">
+    <button class="btn btn-ghost" id="confirmCancel">CANCEL</button>
+    <button class="btn btn-pri" id="confirmOk">CONFIRM</button>
+  </div>
+</div></div>
+
+<!-- BOOKING MODAL -->
+<div class="moverlay" id="bookingModal">
+<div class="modal mw-md">
+  <div class="mhd">
+    <div><div class="mhd-title">NEW BOOKING</div><div class="mhd-sub">Auto number will be assigned</div></div>
+    <div class="mclose" onclick="C('bookingModal')">✕</div>
+  </div>
+  <div class="mbody">
+    <input type="hidden" id="bk-edit-id">
+    <div class="fgrid g2" style="gap:14px">
+      <div class="fg"><label>DATE <span class="req">*</span></label><input class="fi" type="date" id="bk-date"></div>
+      <div class="fg"><label>BRANCH <span class="req">*</span></label><select class="fsel sel-branch"></select></div>
+      <div class="fg"><label>CONSIGNOR <span class="req">*</span></label><select class="fsel sel-consignor"></select></div>
+      <div class="fg"><label>CONSIGNEE <span class="req">*</span></label><select class="fsel sel-consignee"></select></div>
+      <div class="fg"><label>FROM LOCATION <span class="req">*</span></label><input class="fi" id="bk-from-city" placeholder="City / Location"></div>
+      <div class="fg"><label>TO LOCATION <span class="req">*</span></label><input class="fi" id="bk-to-city" placeholder="City / Location"></div>
+    </div>
+    <div class="alert alert-i" style="margin-top:14px">Duplicate detection is active.</div>
+  </div>
+  <div class="mfoot">
+    <button class="btn btn-ghost" onclick="C('bookingModal')">CANCEL</button>
+    <button class="btn btn-pri" onclick="saveBooking()">SAVE BOOKING</button>
+  </div>
+</div></div>
+
+<!-- LR ENTRY MODAL -->
+<div class="moverlay" id="lrModal">
+<div class="modal mw-xl">
+  <div class="mhd">
+    <div>
+      <div class="mhd-title">LORRY RECEIPT ENTRY</div>
+      <div class="mhd-sub">AUTO NO: —</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="mclose" onclick="C('lrModal')">✕</div>
+    </div>
+  </div>
+  <div class="mbody">
+    <input type="hidden" id="lr-next-number">
+    <input type="hidden" id="lr-booking-id">
+
+    <!-- Credit warning -->
+    <div id="lr-credit-warn" class="alert alert-w" style="display:none;margin-bottom:12px"></div>
+
+    <!-- Basic Info -->
+    <div class="sblk">
+      <div class="sblk-hd"><div class="sblk-title">BASIC INFORMATION</div></div>
+      <div class="sblk-body">
+        <div class="fgrid g4" style="gap:14px">
+          <div class="fg"><label>LR DATE <span class="req">*</span></label><input class="fi" type="date" id="lr-date"></div>
+          <div class="fg"><label>VEHICLE NO. <span class="req">*</span></label><input class="fi" id="lr-veh" placeholder="MH04AB1234" style="font-family:var(--font-mono);text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"></div>
+          <div class="fg"><label>DRIVER</label><select class="fsel sel-driver" id="lr-drv"></select></div>
+          <div class="fg"><label>PAYMENT TYPE <span class="req">*</span></label>
+            <select class="fsel" id="lr-pay">
+              <option value="to_pay">To Pay</option>
+              <option value="paid">Paid</option>
+              <option value="to_be_billed">To Be Billed</option>
+              <option value="credit">Credit</option>
+            </select>
+          </div>
+          <div class="fg"><label>CONSIGNOR <span class="req">*</span></label><select class="fsel sel-consignor" onchange=""></select></div>
+          <div class="fg"><label>CONSIGNEE <span class="req">*</span></label><select class="fsel sel-consignee" onchange="checkConsigneeCredit()"></select></div>
+          <div class="fg"><label>FROM CITY <span class="req">*</span></label><input class="fi" id="lr-from-city" placeholder="Mumbai" oninput="autoFillRate()"></div>
+          <div class="fg"><label>TO CITY <span class="req">*</span></label><input class="fi" id="lr-to-city" placeholder="Delhi" oninput="autoFillRate()"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Freight Type -->
+    <div class="sblk">
+      <div class="sblk-hd">
+        <div class="sblk-title">FREIGHT TYPE & ITEMS</div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-pri btn-sm" id="btn-var" onclick="setFT('variable')">VARIABLE (ITEM-BASED)</button>
+          <button class="btn btn-ghost btn-sm" id="btn-fix" onclick="setFT('fixed')">FIXED (LUMPSUM)</button>
+        </div>
+      </div>
+      <div class="sblk-body">
+        <div id="sec-var">
+          <table class="itbl" style="margin-bottom:10px">
+            <thead><tr><th style="width:34%">DESCRIPTION</th><th style="width:10%">QTY</th><th style="width:16%">WEIGHT (KG)</th><th style="width:16%">RATE (₹/KG)</th><th style="width:18%">AMOUNT (₹)</th><th style="width:6%"></th></tr></thead>
+            <tbody id="lr-tbody">
+              <tr>
+                <td><input class="fi" type="text" placeholder="Item / goods description"></td>
+                <td><input class="fi" type="number" value="1" min="1" style="width:55px" oninput="calcRow(this)"></td>
+                <td><input class="fi" type="number" value="0" step="0.01" style="width:75px" data-w oninput="calcRow(this)"></td>
+                <td><input class="fi" type="number" value="0" step="0.01" style="width:75px" data-r oninput="calcRow(this)"></td>
+                <td><input class="fi" type="text" value="₹0.00" readonly data-a style="color:var(--accent-bright);font-family:var(--font-mono);font-weight:500"></td>
+                <td><div class="rm" onclick="removeRow(this)">✕</div></td>
+              </tr>
+            </tbody>
+          </table>
+          <button class="btn btn-ghost btn-sm" onclick="addRow()">+ ADD ITEM</button>
+        </div>
+        <div id="sec-fix" style="display:none">
+          <div class="fg" style="max-width:280px">
+            <label>FIXED FREIGHT AMOUNT (₹) <span class="req">*</span></label>
+            <input class="fi" type="number" step="0.01" placeholder="0.00" id="lr-fixed" oninput="calcTotal()">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- E-Way -->
+    <div class="sblk">
+      <div class="sblk-hd"><div class="sblk-title">E-WAY BILL</div><span style="font-family:var(--font-mono);font-size:8.5px;color:var(--text-muted)">OPTIONAL — SYSTEM MONITORS EXPIRY AUTO</span></div>
+      <div class="sblk-body">
+        <div class="fgrid g3" style="gap:14px">
+          <div class="fg"><label>E-WAY BILL NUMBER</label><input class="fi" id="lr-eway-no" placeholder="12-digit EWB number" style="font-family:var(--font-mono)"></div>
+          <div class="fg"><label>ISSUE DATE</label><input class="fi" type="date" id="lr-eway-issue"></div>
+          <div class="fg"><label>EXPIRY DATE</label><input class="fi" type="date" id="lr-eway-expiry"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charges + Calc -->
+    <div class="col31" style="gap:16px">
+      <div>
+        <div class="sblk">
+          <div class="sblk-hd"><div class="sblk-title">EXTRA CHARGES</div></div>
+          <div class="sblk-body">
+            <div class="fgrid g3" style="gap:12px">
+              <div class="fg"><label>HAMALI</label><input class="fi" type="number" value="0" id="c-h" oninput="calcTotal()"></div>
+              <div class="fg"><label>UNLOADING</label><input class="fi" type="number" value="0" id="c-u" oninput="calcTotal()"></div>
+              <div class="fg"><label>ST CHARGE</label><input class="fi" type="number" value="0" id="c-s" oninput="calcTotal()"></div>
+              <div class="fg"><label>LR CHARGE</label><input class="fi" type="number" value="0" id="c-l" oninput="calcTotal()"></div>
+              <div class="fg s2"><label>OTHER CHARGES</label><input class="fi" type="number" value="0" id="c-o" oninput="calcTotal()"></div>
+            </div>
+          </div>
+        </div>
+        <div class="sblk">
+          <div class="sblk-hd"><div class="sblk-title">GST & CONTROLS</div></div>
+          <div class="sblk-body" style="display:flex;flex-direction:column;gap:8px">
+            <div class="toggle-row">
+              <span class="toggle-lbl">Enable GST</span>
+              <label class="sw"><input type="checkbox" id="gst-tog" onchange="toggleGST()"><span class="sw-track"></span></label>
+            </div>
+            <div id="gst-opts" style="display:none;padding-top:4px">
+              <div class="fg"><label>GST PERCENTAGE</label><select class="fsel" id="gst-pct" onchange="calcTotal()"><option value="5">5%</option><option value="12">12%</option><option value="18" selected>18%</option><option value="28">28%</option></select></div>
+            </div>
+            <div class="toggle-row">
+              <span class="toggle-lbl">Show Amount on LR Print</span>
+              <label class="sw"><input type="checkbox" checked id="show-amt"><span class="sw-track"></span></label>
+            </div>
+          </div>
+        </div>
+        <div class="sblk">
+          <div class="sblk-hd"><div class="sblk-title">BROKER (OPTIONAL)</div></div>
+          <div class="sblk-body">
+            <div class="fgrid g2" style="gap:12px">
+              <div class="fg"><label>BROKER</label><select class="fsel sel-broker"></select></div>
+              <div class="fg"><label>COMMISSION ₹</label><input class="fi" type="number" placeholder="Auto-calculated"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Calc Panel -->
+      <div>
+        <div class="calc">
+          <div style="font-family:var(--font-mono);font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;border-bottom:1px solid var(--border);padding-bottom:8px">BILLING SUMMARY</div>
+          <div class="calc-row"><span class="calc-lbl">Total Freight</span><span class="calc-val" id="c-freight">₹0.00</span></div>
+          <div class="calc-row"><span class="calc-lbl">Hamali</span><span class="calc-val" id="c-hv">₹0.00</span></div>
+          <div class="calc-row"><span class="calc-lbl">Unloading</span><span class="calc-val" id="c-uv">₹0.00</span></div>
+          <div class="calc-row"><span class="calc-lbl">ST Charge</span><span class="calc-val" id="c-sv">₹0.00</span></div>
+          <div class="calc-row"><span class="calc-lbl">LR Charge</span><span class="calc-val" id="c-lv">₹0.00</span></div>
+          <div class="calc-row"><span class="calc-lbl">Other</span><span class="calc-val" id="c-ov">₹0.00</span></div>
+          <div class="calc-row"><span class="calc-lbl">Subtotal</span><span class="calc-val" id="c-sub">₹0.00</span></div>
+          <div class="calc-row"><span class="calc-lbl">GST (<span id="c-gpct">0</span>%)</span><span class="calc-val" id="c-gst">₹0.00</span></div>
+          <div class="calc-row"><span class="calc-lbl">Round Off</span><span class="calc-val" id="c-rnd">₹0.00</span></div>
+          <div class="calc-total-row">
+            <span class="calc-total-lbl">TOTAL AMOUNT</span>
+            <span class="calc-total-val" id="c-total">₹0.00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mfoot">
+    <button class="btn btn-ghost" onclick="C('lrModal')">CANCEL</button>
+    <button class="btn btn-sec" onclick="openPrintModal(null)">PRINT PREVIEW</button>
+    <button class="btn btn-pri" onclick="saveLR()">SAVE & LOCK LR</button>
+  </div>
+</div></div>
+
+<!-- LR VIEW MODAL -->
+<div class="moverlay" id="lrViewModal">
+<div class="modal mw-lg">
+  <div class="mhd">
+    <div><div class="mhd-title">LR DETAILS</div><div class="mhd-sub"></div></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-ghost btn-sm">PRINT</button>
+      <div class="mclose" onclick="C('lrViewModal')">✕</div>
+    </div>
+  </div>
+  <div class="mbody">
+    <!-- Populated dynamically by viewLR() -->
+    <div class="empty"><div class="empty-ico">📄</div><div class="empty-txt">Loading...</div></div>
+  </div>
+</div></div>
+
+<!-- MANIFEST MODAL -->
+<div class="moverlay" id="manifestModal">
+<div class="modal mw-lg">
+  <div class="mhd">
+    <div><div class="mhd-title">NEW MANIFEST</div><div class="mhd-sub">Auto number will be assigned</div></div>
+    <div class="mclose" onclick="C('manifestModal')">✕</div>
+  </div>
+  <div class="mbody">
+    <div class="fgrid g3" style="gap:14px;margin-bottom:16px">
+      <div class="fg"><label>DATE <span class="req">*</span></label><input class="fi" type="date" id="mf-date"></div>
+      <div class="fg"><label>VEHICLE NO. <span class="req">*</span></label><input class="fi" id="mf-vehicle" list="vehicle-datalist" placeholder="MH04AB1234" style="font-family:var(--font-mono);text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"></div>
+      <div class="fg"><label>DRIVER <span class="req">*</span></label><select class="fsel sel-driver"></select></div>
+      <div class="fg"><label>FROM BRANCH <span class="req">*</span></label><select class="fsel sel-from-branch" onchange="loadManifestLRs()"></select></div>
+      <div class="fg"><label>TO BRANCH <span class="req">*</span></label><select class="fsel sel-to-branch"></select></div>
+    </div>
+    <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px">SELECT LRs TO ASSIGN</div>
+    <div id="manifest-lr-list" style="max-height:300px;overflow-y:auto;border:1px solid var(--border);border-radius:2px">
+      <div style="padding:16px;text-align:center;color:var(--text-muted);font-size:11.5px">Select From Branch to load available LRs</div>
+    </div>
+  </div>
+  <div class="mfoot">
+    <button class="btn btn-ghost" onclick="C('manifestModal')">CANCEL</button>
+    <button class="btn btn-pri" onclick="saveManifest()">CREATE MANIFEST</button>
+  </div>
+</div></div>
+
+<!-- DELIVERY MODAL -->
+<div class="moverlay" id="deliveryModal">
+<div class="modal mw-md">
+  <div class="mhd">
+    <div><div class="mhd-title">MARK DELIVERY</div><div class="mhd-sub"></div></div>
+    <div class="mclose" onclick="C('deliveryModal')">✕</div>
+  </div>
+  <div class="mbody">
+    <div class="fgrid g2" style="gap:14px">
+      <div class="fg"><label>DELIVERY DATE <span class="req">*</span></label><input class="fi" type="date" id="delivery-date"></div>
+      <div class="fg"><label>DELIVERY STATUS <span class="req">*</span></label>
+        <select class="fsel" id="delivery-status">
+          <option value="delivered">Delivered (Full)</option>
+          <option value="partial">Partial Delivery</option>
+        </select>
+      </div>
+      <div class="fg s2"><label>POD REMARKS</label><textarea class="fta" id="delivery-remarks" rows="2" placeholder="Proof of delivery notes, receiver name…"></textarea></div>
+    </div>
+  </div>
+  <div class="mfoot">
+    <button class="btn btn-ghost" onclick="C('deliveryModal')">CANCEL</button>
+    <button class="btn btn-pri" onclick="saveDelivery()">SAVE DELIVERY STATUS</button>
+  </div>
+</div></div>
+
+<!-- PAYMENT MODAL -->
+<div class="moverlay" id="paymentModal">
+<div class="modal mw-md">
+  <div class="mhd"><div class="mhd-title">ADD PAYMENT</div><div class="mclose" onclick="C('paymentModal')">✕</div></div>
+  <div class="mbody">
+    <div class="fgrid g2" style="gap:14px">
+      <div class="fg"><label>PARTY <span class="req">*</span></label><select class="fsel sel-party"></select></div>
+      <div class="fg"><label>DATE <span class="req">*</span></label><input class="fi" type="date" id="pmt-date"></div>
+      <div class="fg"><label>AMOUNT (₹) <span class="req">*</span></label><input class="fi" type="number" id="pmt-amount" placeholder="0.00"></div>
+      <div class="fg"><label>MODE <span class="req">*</span></label>
+        <select class="fsel" id="pmt-mode">
+          <option value="cash">Cash</option>
+          <option value="neft">NEFT</option>
+          <option value="cheque">Cheque</option>
+          <option value="upi">UPI</option>
+          <option value="rtgs">RTGS</option>
+        </select>
+      </div>
+      <div class="fg s2"><label>REFERENCE / UTR / CHEQUE NO.</label><input class="fi" id="pmt-ref" placeholder="Reference number…" style="font-family:var(--font-mono)"></div>
+      <div class="fg s2"><label>NOTES</label><input class="fi" id="pmt-remarks" placeholder="Optional notes…"></div>
+      <div class="fg"><label>BRANCH</label><select class="fsel sel-branch"></select></div>
+    </div>
+  </div>
+  <div class="mfoot">
+    <button class="btn btn-ghost" onclick="C('paymentModal')">CANCEL</button>
+    <button class="btn btn-pri" onclick="savePayment()">SAVE PAYMENT</button>
+  </div>
+</div></div>
+
+<!-- EXPENSE MODAL -->
+<div class="moverlay" id="expenseModal">
+<div class="modal mw-sm">
+  <div class="mhd"><div class="mhd-title">ADD EXPENSE</div><div class="mclose" onclick="C('expenseModal')">✕</div></div>
+  <div class="mbody">
+    <div class="fgrid g2" style="gap:14px">
+      <div class="fg"><label>DATE <span class="req">*</span></label><input class="fi" type="date" id="exp-date"></div>
+      <div class="fg"><label>LR NUMBER (optional)</label><input class="fi" id="exp-lr-ref" placeholder="LR/2026/…" style="font-family:var(--font-mono)"></div>
+      <div class="fg"><label>EXPENSE TYPE <span class="req">*</span></label>
+        <select class="fsel" id="exp-category">
+          <option value="">— Select Type —</option>
+          <option value="Fuel">Fuel</option>
+          <option value="Toll">Toll</option>
+          <option value="Driver Allowance">Driver Allowance</option>
+          <option value="Repair">Repair</option>
+          <option value="Weighment">Weighment</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="fg"><label>AMOUNT (₹) <span class="req">*</span></label><input class="fi" type="number" id="exp-amount" placeholder="0.00"></div>
+      <div class="fg"><label>PAYMENT MODE</label>
+        <select class="fsel" id="exp-mode">
+          <option value="cash">Cash</option>
+          <option value="neft">NEFT</option>
+          <option value="upi">UPI</option>
+        </select>
+      </div>
+      <div class="fg"><label>NOTES</label><input class="fi" id="exp-desc" placeholder="Optional…"></div>
+    </div>
+  </div>
+  <div class="mfoot">
+    <button class="btn btn-ghost" onclick="C('expenseModal')">CANCEL</button>
+    <button class="btn btn-pri" onclick="saveExpense()">SAVE EXPENSE</button>
+  </div>
+</div></div>
+
+<!-- PARTY MODAL -->
+<div class="moverlay" id="partyModal">
+<div class="modal mw-md">
+  <div class="mhd">
+    <div><div class="mhd-title" id="party-modal-title">ADD PARTY</div></div>
+    <div class="mclose" onclick="C('partyModal')">✕</div>
+  </div>
+  <div class="mbody">
+    <input type="hidden" id="party-edit-id">
+    <div class="fgrid g2" style="gap:14px">
+      <div class="fg s2"><label>PARTY / COMPANY NAME <span class="req">*</span></label><input class="fi" id="party-name" placeholder="Full legal name"></div>
+      <div class="fg"><label>TYPE <span class="req">*</span></label>
+        <select class="fsel" id="party-type">
+          <option value="consignor">Consignor</option>
+          <option value="consignee">Consignee</option>
+          <option value="both">Both</option>
+        </select>
+      </div>
+      <div class="fg"><label>MOBILE</label><input class="fi" id="party-mobile" type="tel" placeholder="10-digit mobile"></div>
+      <div class="fg"><label>GSTIN</label><input class="fi" id="party-gstin" placeholder="15-digit GSTIN" style="font-family:var(--font-mono)"></div>
+      <div class="fg"><label>CREDIT LIMIT (₹)</label><input class="fi" id="party-credit" type="number" value="0"></div>
+      <div class="fg"><label>EMAIL</label><input class="fi" id="party-email" type="email" placeholder="email@example.com"></div>
+      <div class="fg"><label>CITY</label><input class="fi" id="party-city" placeholder="Mumbai"></div>
+      <div class="fg"><label>STATE</label><input class="fi" id="party-state" placeholder="Maharashtra"></div>
+      <div class="fg"><label>PAN</label><input class="fi" id="party-pan" placeholder="ABCDE1234F" style="font-family:var(--font-mono)"></div>
+      <div class="fg s2"><label>ADDRESS</label><textarea class="fta" id="party-address" rows="2" placeholder="Full address…"></textarea></div>
+    </div>
+  </div>
+  <div class="mfoot">
+    <button class="btn btn-ghost" onclick="C('partyModal')">CANCEL</button>
+    <button class="btn btn-pri" onclick="saveParty()">SAVE PARTY</button>
+  </div>
+</div></div>
+
+<!-- USER MODAL -->
+<div class="moverlay" id="userModal">
+<div class="modal mw-md">
+  <div class="mhd">
+    <div><div class="mhd-title" id="user-modal-title">ADD USER</div></div>
+    <div class="mclose" onclick="C('userModal')">✕</div>
+  </div>
+  <div class="mbody">
+    <input type="hidden" id="user-edit-id">
+    <div class="fgrid g2" style="gap:14px">
+      <div class="fg"><label>FULL NAME <span class="req">*</span></label><input class="fi" id="user-name-input" placeholder="Employee name"></div>
+      <div class="fg"><label>MOBILE <span class="req">*</span></label><input class="fi" id="user-mobile" type="tel" placeholder="10-digit"></div>
+      <div class="fg s2"><label>EMAIL <span class="req">*</span></label><input class="fi" id="user-email" type="email" placeholder="user@company.com"></div>
+      <div class="fg"><label>ROLE <span class="req">*</span></label>
+        <select class="fsel" id="user-role-select">
+          <option value="admin">Admin</option>
+          <option value="manager">Manager</option>
+          <option value="operator" selected>Operator</option>
+          <option value="accountant">Accountant</option>
+        </select>
+      </div>
+      <div class="fg"><label>BRANCH <span class="req">*</span></label><select class="fsel sel-branch" id="user-branch"></select></div>
+      <div class="fg"><label>PASSWORD</label><input class="fi" type="password" id="user-pass" placeholder="Min 8 characters"></div>
+      <div class="fg s2"><div class="toggle-row"><span class="toggle-lbl">Account Active</span><label class="sw"><input type="checkbox" id="user-active" checked><span class="sw-track"></span></label></div></div>
+    </div>
+  </div>
+  <div class="mfoot">
+    <button class="btn btn-ghost" onclick="C('userModal')">CANCEL</button>
+    <button class="btn btn-pri" onclick="saveUser()">SAVE USER</button>
+  </div>
+</div></div>
+
+<!-- BRANCH SWITCH MODAL -->
+<div class="moverlay" id="branchModal">
+<div class="modal mw-sm">
+  <div class="mhd"><div class="mhd-title">SWITCH BRANCH</div><div class="mclose" onclick="C('branchModal')">✕</div></div>
+  <div class="mbody" style="padding:10px">
+    <div id="branch-list">
+      <div style="padding:16px;text-align:center;color:var(--text-muted);font-size:11.5px">Loading branches...</div>
+    </div>
+  </div>
+</div></div>
+
+<!-- BRANCH FORM MODAL -->
+<div class="moverlay" id="branchFormModal">
+<div class="modal mw-sm">
+  <div class="mhd">
+    <div><div class="mhd-title" id="branch-modal-title">ADD BRANCH</div></div>
+    <div class="mclose" onclick="C('branchFormModal')">✕</div>
+  </div>
+  <div class="mbody">
+    <input type="hidden" id="branch-edit-id">
+    <div class="fgrid g2" style="gap:14px">
+      <div class="fg s2"><label>BRANCH NAME <span class="req">*</span></label><input class="fi" id="branch-name" placeholder="Mumbai HQ"></div>
+      <div class="fg"><label>CITY</label><input class="fi" id="branch-city" placeholder="Mumbai"></div>
+      <div class="fg"><label>PHONE</label><input class="fi" id="branch-phone" placeholder="022-XXXXXXXX"></div>
+      <div class="fg s2"><label>ADDRESS</label><textarea class="fta" id="branch-address" rows="2" placeholder="Full address…"></textarea></div>
+    </div>
+  </div>
+  <div class="mfoot">
+    <button class="btn btn-ghost" onclick="C('branchFormModal')">CANCEL</button>
+    <button class="btn btn-pri" onclick="saveBranch()">SAVE BRANCH</button>
+  </div>
+</div></div>
+
+<!-- DRIVER MODAL -->
+<div class="moverlay" id="driverModal">
+<div class="modal mw-sm">
+  <div class="mhd">
+    <div><div class="mhd-title" id="driver-modal-title">ADD DRIVER</div></div>
+    <div class="mclose" onclick="C('driverModal')">✕</div>
+  </div>
+  <div class="mbody">
+    <input type="hidden" id="driver-edit-id">
+    <div class="fgrid g2" style="gap:14px">
+      <div class="fg s2"><label>FULL NAME <span class="req">*</span></label><input class="fi" id="driver-name" placeholder="Driver full name"></div>
+      <div class="fg"><label>MOBILE <span class="req">*</span></label><input class="fi" id="driver-mobile" type="tel" placeholder="10-digit"></div>
+      <div class="fg"><label>LICENSE NO. <span class="req">*</span></label><input class="fi" id="driver-license" placeholder="License number" style="font-family:var(--font-mono)"></div>
+      <div class="fg"><label>LICENSE EXPIRY</label><input class="fi" id="driver-expiry" type="date"></div>
+    </div>
+  </div>
+  <div class="mfoot">
+    <button class="btn btn-ghost" onclick="C('driverModal')">CANCEL</button>
+    <button class="btn btn-pri" onclick="saveDriver()">SAVE DRIVER</button>
+  </div>
+</div></div>
+
+<!-- VEHICLE MODAL -->
+<div class="moverlay" id="vehicleModal">
+<div class="modal mw-sm">
+  <div class="mhd">
+    <div><div class="mhd-title" id="vehicle-modal-title">ADD VEHICLE</div></div>
+    <div class="mclose" onclick="C('vehicleModal')">✕</div>
+  </div>
+  <div class="mbody">
+    <input type="hidden" id="vehicle-edit-id">
+    <div class="fgrid g2" style="gap:14px">
+      <div class="fg"><label>VEHICLE NO. <span class="req">*</span></label><input class="fi" id="vehicle-no" placeholder="MH04AB1234" style="font-family:var(--font-mono);text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"></div>
+      <div class="fg"><label>VEHICLE TYPE</label>
+        <select class="fsel" id="vehicle-type">
+          <option value="truck">Truck</option>
+          <option value="mini_truck">Mini Truck</option>
+          <option value="tempo">Tempo</option>
+          <option value="trailer">Trailer</option>
+          <option value="container">Container</option>
+        </select>
+      </div>
+      <div class="fg"><label>OWNER NAME</label><input class="fi" id="vehicle-owner" placeholder="Owner / operator name"></div>
+      <div class="fg"><label>OWNER MOBILE</label><input class="fi" id="vehicle-mobile" type="tel" placeholder="10-digit"></div>
+    </div>
+  </div>
+  <div class="mfoot">
+    <button class="btn btn-ghost" onclick="C('vehicleModal')">CANCEL</button>
+    <button class="btn btn-pri" onclick="saveVehicle()">SAVE VEHICLE</button>
+  </div>
+</div></div>
+
+<!-- BROKER MODAL -->
+<div class="moverlay" id="brokerModal">
+<div class="modal mw-sm">
+  <div class="mhd">
+    <div><div class="mhd-title" id="broker-modal-title">ADD BROKER</div></div>
+    <div class="mclose" onclick="C('brokerModal')">✕</div>
+  </div>
+  <div class="mbody">
+    <input type="hidden" id="broker-edit-id">
+    <div class="fgrid g2" style="gap:14px">
+      <div class="fg s2"><label>BROKER NAME <span class="req">*</span></label><input class="fi" id="broker-name" placeholder="Broker / agent name"></div>
+      <div class="fg"><label>MOBILE</label><input class="fi" id="broker-mobile" type="tel" placeholder="10-digit"></div>
+      <div class="fg"><label>COMMISSION %</label><input class="fi" id="broker-commission" type="number" step="0.01" value="0" placeholder="e.g. 2.5"></div>
+    </div>
+  </div>
+  <div class="mfoot">
+    <button class="btn btn-ghost" onclick="C('brokerModal')">CANCEL</button>
+    <button class="btn btn-pri" onclick="saveBroker()">SAVE BROKER</button>
+  </div>
+</div></div>
+
+<!-- RATE MODAL -->
+<div class="moverlay" id="rateModal">
+<div class="modal mw-sm">
+  <div class="mhd">
+    <div><div class="mhd-title" id="rate-modal-title">ADD RATE</div></div>
+    <div class="mclose" onclick="C('rateModal')">✕</div>
+  </div>
+  <div class="mbody">
+    <input type="hidden" id="rate-edit-id">
+    <div class="fgrid g2" style="gap:14px">
+      <div class="fg"><label>FROM CITY <span class="req">*</span></label><input class="fi" id="rate-from" placeholder="Mumbai"></div>
+      <div class="fg"><label>TO CITY <span class="req">*</span></label><input class="fi" id="rate-to" placeholder="Delhi"></div>
+      <div class="fg"><label>RATE PER KG (₹) <span class="req">*</span></label><input class="fi" id="rate-per-kg" type="number" step="0.01" placeholder="0.00"></div>
+      <div class="fg"><label>MINIMUM CHARGE (₹)</label><input class="fi" id="rate-min" type="number" step="0.01" value="0"></div>
+      <div class="fg"><label>EFFECTIVE DATE</label><input class="fi" id="rate-date" type="date"></div>
+    </div>
+  </div>
+  <div class="mfoot">
+    <button class="btn btn-ghost" onclick="C('rateModal')">CANCEL</button>
+    <button class="btn btn-pri" onclick="saveRate()">SAVE RATE</button>
+  </div>
+</div></div>
+
+<!-- PRINT MODAL -->
+<div class="moverlay" id="printModal">
+<div class="modal mw-lg">
+  <div class="mhd">
+    <div class="mhd-title">PRINT PREVIEW</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <div class="mclose" onclick="C('printModal')">✕</div>
+    </div>
+  </div>
+  <div class="mbody" style="background:#e8ecf0;padding:20px">
+    <div class="receipt-paper" id="receipt-full">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;padding-bottom:14px;border-bottom:2px solid #1a2d4a">
+        <div>
+          <div id="print-company" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:#0c1628;letter-spacing:.5px">YOUR COMPANY NAME</div>
+          <div id="print-details" style="font-size:10px;color:#6b7e94;margin-top:2px">Address · GSTIN · Phone</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:10px;color:#8fa8c8;font-family:'IBM Plex Mono',monospace;letter-spacing:1px;text-transform:uppercase">Lorry Receipt</div>
+          <div data-lr-number style="font-family:'Barlow Condensed',monospace;font-size:26px;font-weight:800;color:#0c1628">LR/—</div>
+          <div data-lr-date style="font-size:10px;color:#6b7e94;font-family:'IBM Plex Mono',monospace"></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:14px;font-size:11px">
+        <div><div style="font-size:8.5px;text-transform:uppercase;letter-spacing:1px;color:#8fa8c8;font-family:monospace;margin-bottom:3px">Consignor</div><strong data-consignor>—</strong></div>
+        <div><div style="font-size:8.5px;text-transform:uppercase;letter-spacing:1px;color:#8fa8c8;font-family:monospace;margin-bottom:3px">Consignee</div><strong data-consignee>—</strong></div>
+        <div><div style="font-size:8.5px;text-transform:uppercase;letter-spacing:1px;color:#8fa8c8;font-family:monospace;margin-bottom:3px">From</div><strong data-from>—</strong></div>
+        <div><div style="font-size:8.5px;text-transform:uppercase;letter-spacing:1px;color:#8fa8c8;font-family:monospace;margin-bottom:3px">To</div><strong data-to>—</strong></div>
+        <div><div style="font-size:8.5px;text-transform:uppercase;letter-spacing:1px;color:#8fa8c8;font-family:monospace;margin-bottom:3px">Vehicle</div><strong data-vehicle style="font-family:monospace">—</strong></div>
+        <div><div style="font-size:8.5px;text-transform:uppercase;letter-spacing:1px;color:#8fa8c8;font-family:monospace;margin-bottom:3px">Driver</div><strong data-driver>—</strong></div>
+        <div><div style="font-size:8.5px;text-transform:uppercase;letter-spacing:1px;color:#8fa8c8;font-family:monospace;margin-bottom:3px">Payment</div><strong data-payment>—</strong></div>
+        <div><div style="font-size:8.5px;text-transform:uppercase;letter-spacing:1px;color:#8fa8c8;font-family:monospace;margin-bottom:3px">E-Way Bill</div><strong data-eway style="font-family:monospace">—</strong></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:12px">
+        <div style="font-size:10px;color:#8fa8c8">
+          <div data-booking-ref></div>
+          <div>E-Way Expiry: <span data-eway-expiry>—</span></div>
+        </div>
+        <div style="width:220px;font-size:11px">
+          <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #dde4ec"><span>Freight</span><span data-freight style="font-family:monospace">—</span></div>
+          <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #dde4ec"><span>Hamali</span><span data-hamali style="font-family:monospace">—</span></div>
+          <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #dde4ec"><span>GST</span><span data-gst style="font-family:monospace">—</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;font-weight:800;font-size:13px;font-family:'Barlow Condensed',sans-serif;letter-spacing:.3px"><span>TOTAL AMOUNT</span><span data-total>—</span></div>
+        </div>
+      </div>
+      <div style="margin-top:16px;padding-top:12px;border-top:1px solid #dde4ec;display:flex;justify-content:space-between;font-size:10px;color:#8fa8c8">
+        <span>Receiver's Signature: _______________________</span>
+        <span>For <span data-co-sig>Your Company</span> — Authorised Signatory</span>
+      </div>
+    </div>
+  </div>
+  <div class="mfoot">
+    <button class="btn btn-ghost" onclick="C('printModal')">CLOSE</button>
+    <button class="btn btn-pri" onclick="window.print()">PRINT</button>
+  </div>
+</div></div>
+
+<datalist id="vehicle-datalist"></datalist>
+<select class="sel-vehicle" style="display:none" aria-hidden="true"></select>
+
+<!-- Toast stack -->
+<div class="toast-stack" id="toastStack"></div>
+
+<!-- ══════════════════════════════════════════════════════════ SCRIPTS -->
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="core.js"></script>
+<script src="modules.js"></script>
+<script src="masters.js"></script>
+<!-- Supabase credentials loaded from config.js (loaded above) -->
+
+</body>
+</html>
